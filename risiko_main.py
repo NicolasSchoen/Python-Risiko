@@ -18,6 +18,7 @@ print("zweimal wuerfeln =", wuerfel.wuerfeln(2))
 map = karte.Karte()
 map.felderInitialisieren()
 angriffvon = ""     #Hier wird Provinzid gespeichert, von der Angriff ausgeht
+aktiverSpieler = 1
 
 
 
@@ -46,16 +47,20 @@ def btn1func():
 
 
 def btnprovfunc(zahl):
-    map.drueckeKnopf(zahl)
+    map.drueckeKnopf(zahl, aktiverSpieler)
+    provinit()
 
     print("Phase:", map.getPhase())
     if (map.getPhase()[1] == 2):
-        nachbarnZeigen(zahl)
+        nachbarnZeigen(1,zahl)
+    elif (map.getPhase()[1] == 3):
+        nachbarnZeigen(2,zahl)
 
 
 def provinit():
     for x in range(13):
         if x != 0:
+            butt[x].config(text=map.getProvInfo(x)[0])
             provinf = map.getProvInfo(x)
             if(provinf[1] == 1):
                 butt[x].config(bg="blue")
@@ -68,13 +73,16 @@ def provinit():
 
 
 
-def nachbarnZeigen(provid):
-    provinit()
+def nachbarnZeigen(modus, provid):      #modus = 1|2: angriff oder bewegen; privid = Provinz
     angriffvon = provid
     nbrn = map.nachbarn(provid)
     for x in range(len(nbrn)):
-        if(map.getProvInfo(provid)[1] != map.getProvInfo(nbrn[x])[1]):
-            butt[nbrn[x]].config(bg="red")
+        if (modus == 1):
+            if(map.getProvInfo(provid)[1] != map.getProvInfo(nbrn[x])[1]):
+                butt[nbrn[x]].config(bg="red")
+        elif (modus == 2):
+            if (map.getProvInfo(provid)[1] == map.getProvInfo(nbrn[x])[1]):
+                butt[nbrn[x]].config(bg="grey")
 
 
 

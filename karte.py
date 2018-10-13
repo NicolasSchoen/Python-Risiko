@@ -14,7 +14,7 @@ class Karte:
     knotenzahl = {1 : [2,12], 2 : [1,3,4], 3 : [2,4], 4 : [2,3,5], 5 : [4,6], 6 : [5,7,8,12], 7 : [6,8,9], 8 : [6,7], 9 : [7,10], 10 : [9,11], 11 : [10], 12 : [1,6]}
 
     # "info" : (anzEinheiten, BesitzerId)
-    info = {1 : (1,2), 2 : (1,1), 3 : (1,1), 4 : (1,1), 5 : (1,1), 6 : (1,1), 7 : (1,1), 8 : (1,1), 9 : (1,1), 10 : (1,1), 11 : (1,1), 12 : (1,1)}
+    info = {1 : [1,2], 2 : [1,1], 3 : [1,1], 4 : [1,1], 5 : [1,1], 6 : [1,1], 7 : [1,1], 8 : [1,1], 9 : [1,1], 10 : [1,1], 11 : [1,1], 12 : [1,1]}
 
 
     def __init__(self, anz=4):
@@ -40,9 +40,27 @@ class Karte:
     def getPhase(self):
         return (self.phasetext[self.phase], self.phase)
 
+    def verstaerkeProv(self, numr):
+        einheiten = self.info[numr][0]
+        einheiten += 1
+        self.info[numr][0] = einheiten
 
-    def drueckeKnopf(self, numr):
+
+    def drueckeKnopf(self, numr, spielernr):
         #assert (isinstance(int, numr) and (numr<= 12 and numr > 0)), "Fehlerhafte Provinz gewaehlt"
+        if(spielernr == self.spielerAnReihe()):
+            #fuehre aktion des spielers aus, der gerade an reihe ist
+            if self.phase == 1:
+                pass
+            elif self.phase == 2:
+                pass
+            elif self.phase == 3:
+                pass
+
+        if self.phase == 1:
+            self.verstaerkeProv(numr)
+
+
         print(self.knotennamen[numr])
 
 
@@ -66,7 +84,7 @@ class Karte:
                 besitzer = randint(1,2)
                 if(sp[besitzer-1] > 0):
                     sp[besitzer-1] -= 1
-                    self.info[frei] = (1, besitzer)
+                    self.info[frei][1] = besitzer
                     frei-=1
 
                 #print("F2", frei,besitzer,self.info)
@@ -81,7 +99,7 @@ class Karte:
                 besitzer = randint(1, 3)
                 if (sp[besitzer-1] > 0):
                     sp[besitzer-1] -= 1
-                    self.info[frei] = (1, besitzer)
+                    self.info[frei][1] = besitzer
                     frei -= 1
             pass
         if (self.anzSpieler == 4):
@@ -94,6 +112,6 @@ class Karte:
                 besitzer = randint(1, 4)
                 if (sp[besitzer-1] > 0):
                     sp[besitzer-1] -= 1
-                    self.info[frei] = (1, besitzer)
+                    self.info[frei][1] = besitzer
                     frei -= 1
             pass
