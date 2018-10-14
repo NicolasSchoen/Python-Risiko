@@ -75,9 +75,7 @@ class Karte:
 
     #erhoehe die Anzahl der Einheiten der angegebenen Provinz um 1
     def verstaerkeProv(self, numr):
-        einheiten = self.info[numr][0]
-        einheiten += 1
-        self.info[numr][0] = einheiten
+        self.info[numr][0] += 1
 
 
     #TODO
@@ -107,9 +105,11 @@ class Karte:
                 #self.verstaerkung = self.berechneVerstaerkung(spielernr)   #wird zu beginn einer runde aufgerufen, nachdem der/die gegner fertig ist/sind
                 self.verstaerkeProv(provnumr)
             elif self.phase == 2:
-                if((not self.eigeneProvinz(provnumr, spielernr)) and self.provAuswahl != 0):
+                if((not self.eigeneProvinz(provnumr, spielernr)) and self.provAuswahl != 0 and provnumr in self.knotenzahl[self.provAuswahl]):
                     self.provAuswahl = 0
                     return ["angriff", provnumr]
+                elif(self.eigeneProvinz(provnumr, spielernr)):
+                    self.provAuswahl = provnumr
             elif self.phase == 3:
                 pass
 

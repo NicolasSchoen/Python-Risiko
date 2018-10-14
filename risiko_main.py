@@ -59,6 +59,8 @@ def btnprovfunc(zahl):
                 nachbarnZeigen(1,zahl)
             elif (map.getPhase()[1] == 3):
                 nachbarnZeigen(2,zahl)
+            elif (map.getPhase()[1] == 1):
+                provinit()
     else:
         msg = "Schlacht von " + map.nameVon(zahl)
         print(msg)
