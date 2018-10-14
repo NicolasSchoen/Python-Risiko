@@ -1,5 +1,6 @@
 from random import *
 from tkinter import *
+from tkinter.messagebox import *
 import wuerfel
 import karte
 
@@ -47,14 +48,21 @@ def btn1func():
 
 
 def btnprovfunc(zahl):
-    map.drueckeKnopf(zahl, aktiverSpieler)
     provinit()
 
-    print("Phase:", map.getPhase())
-    if (map.getPhase()[1] == 2):
-        nachbarnZeigen(1,zahl)
-    elif (map.getPhase()[1] == 3):
-        nachbarnZeigen(2,zahl)
+    if(map.drueckeKnopf(zahl, aktiverSpieler) == None):
+
+        print("Phase:", map.getPhase())
+
+        if (map.getBesitzer(zahl) == aktiverSpieler):
+            if (map.getPhase()[1] == 2):
+                nachbarnZeigen(1,zahl)
+            elif (map.getPhase()[1] == 3):
+                nachbarnZeigen(2,zahl)
+    else:
+        msg = "Schlacht von " + map.nameVon(zahl)
+        print(msg)
+        showinfo("Angriff",msg)
 
 
 def provinit():
