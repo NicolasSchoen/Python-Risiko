@@ -37,6 +37,11 @@ class Karte:
         return self.info[knoten]
 
 
+    #gibt Karte zurueck
+    def getMap(self):
+        return self.info
+
+
     #gibt den Besitzer der engagabenen Provinz zurueck
     def getBesitzer(self, knoten):
         return self.info[knoten][1]
