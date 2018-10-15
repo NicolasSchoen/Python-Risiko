@@ -50,7 +50,8 @@ def btn1func():
 def btnprovfunc(zahl):
     provinit()
 
-    if(map.drueckeKnopf(zahl, aktiverSpieler) == None):
+    rueckgabe = map.drueckeKnopf(zahl, aktiverSpieler)
+    if(rueckgabe == None):
 
         print("Phase:", map.getPhase())
 
@@ -61,10 +62,13 @@ def btnprovfunc(zahl):
                 nachbarnZeigen(2,zahl)
             elif (map.getPhase()[1] == 1):
                 provinit()
-    else:
+    elif (rueckgabe[0] == "angriff"):
         msg = "Schlacht von " + map.nameVon(zahl)
         print(msg)
         showinfo("Angriff",msg)
+    elif (rueckgabe[0] == "bewegen"):
+        provinit()
+
 
 
 def provinit():

@@ -74,8 +74,15 @@ class Karte:
 
 
     #erhoehe die Anzahl der Einheiten der angegebenen Provinz um 1
-    def verstaerkeProv(self, numr):
-        self.info[numr][0] += 1
+    def verstaerkeProv(self, numr, anzahl=1):
+        self.info[numr][0] += anzahl
+
+
+    #bewege 'anzahl' Einheiten von Provinz'von' nach Provinz'nach'
+    def bewege(self,von,nach,anzahl=1):
+        if(self.info[von][0] > anzahl):
+            self.info[von][0] -= anzahl
+            self.info[nach][0] += anzahl
 
 
     #TODO
@@ -88,6 +95,7 @@ class Karte:
         pass
 
 
+    #gibt zurueck, ob die angegebene Provinz dem Spieler gehoert
     def eigeneProvinz(self, provnr, spielernr):
         if(self.info[provnr][1] == spielernr):
             return True
@@ -111,7 +119,12 @@ class Karte:
                 elif(self.eigeneProvinz(provnumr, spielernr)):
                     self.provAuswahl = provnumr
             elif self.phase == 3:
-                pass
+                if ((self.eigeneProvinz(provnumr, spielernr)) and self.provAuswahl != 0 and provnumr in self.knotenzahl[self.provAuswahl]):
+                    self.bewege(self.provAuswahl,provnumr)
+                    self.provAuswahl = 0
+                    return ["bewegen", provnumr]
+                elif (self.eigeneProvinz(provnumr, spielernr)):
+                    self.provAuswahl = provnumr
 
         if (self.provAuswahl == 0):
             self.provAuswahl = provnumr
