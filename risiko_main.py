@@ -28,8 +28,9 @@ aktiverSpieler = 1
 def btn1func():
     w = map.drueckeRunde()
     r = map.spielerAnReihe()
+    provinit()
 
-    if w == 0:
+    if r != aktiverSpieler:
         if r == 1:
             butt1.config(image = imgstart)
         elif r == 2:
@@ -43,7 +44,6 @@ def btn1func():
     elif w == 2:
         butt1.config(image=imgangriff)
     elif w == 3:
-        provinit()
         butt1.config(image=imgbewegen)
 
 
@@ -66,6 +66,7 @@ def btnprovfunc(zahl):
         msg = "Schlacht von " + map.nameVon(zahl)
         print(msg)
         showinfo("Angriff",msg)
+        provinit()
     elif (rueckgabe[0] == "bewegen"):
         provinit()
 

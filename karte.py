@@ -90,9 +90,12 @@ class Karte:
             self.info[nach][0] += anzahl
 
 
-    #TODO
-    def angreifen(self, provnr):
-        pass
+    #TODO 'spieler' greift von Provinz 'von' mit 'anz' Einheiten Provinz 'nach' an
+    def angreifen(self, von, nach, anzahl, spieler):
+        if(self.info[von][0] > anzahl):
+            self.info[von][0] -= anzahl
+            self.info[nach][1] = spieler
+            self.info[nach][0] = anzahl
 
 
     #TODO
@@ -119,6 +122,7 @@ class Karte:
                 self.verstaerkeProv(provnumr)
             elif self.phase == 2:
                 if((not self.eigeneProvinz(provnumr, spielernr)) and self.provAuswahl != 0 and provnumr in self.knotenzahl[self.provAuswahl]):
+                    self.angreifen(self.provAuswahl, provnumr, 1, spielernr)
                     self.provAuswahl = 0
                     return ["angriff", provnumr]
                 elif(self.eigeneProvinz(provnumr, spielernr)):
@@ -131,8 +135,10 @@ class Karte:
                 elif (self.eigeneProvinz(provnumr, spielernr)):
                     self.provAuswahl = provnumr
 
-        if (self.provAuswahl == 0):
-            self.provAuswahl = provnumr
+            if (self.provAuswahl == 0):
+                self.provAuswahl = provnumr
+        else:
+            return ["spieler", self.spielerAnReihe(), "dran"]
 
         #if self.phase == 1 and self.spielerDran+1 == spielernr and self.info[provnumr][1] == spielernr:
         #    self.verstaerkeProv(provnumr)
