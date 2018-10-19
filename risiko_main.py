@@ -16,7 +16,7 @@ print("einmal wuerfeln =", wuerfel.wuerfeln())
 print("zweimal wuerfeln =", wuerfel.wuerfeln(2))
 
 
-map = karte.Karte()
+map = karte.Karte(4)
 map.felderInitialisieren()
 angriffvon = ""     #Hier wird Provinzid gespeichert, von der Angriff ausgeht
 aktiverSpieler = 1
@@ -78,7 +78,7 @@ def provinit():
             butt[x].config(text=map.getProvInfo(x)[0])
             provinf = map.getProvInfo(x)
             if(provinf[1] == 1):
-                butt[x].config(bg="blue")
+                butt[x].config(bg="lightblue")
             elif(provinf[1] == 2):
                 butt[x].config(bg="yellow")
             elif (provinf[1] == 3):
@@ -97,7 +97,7 @@ def nachbarnZeigen(modus, provid):      #modus = 1|2: angriff oder bewegen; priv
                 butt[nbrn[x]].config(bg="red")
         elif (modus == 2):
             if (map.getProvInfo(provid)[1] == map.getProvInfo(nbrn[x])[1]):
-                butt[nbrn[x]].config(bg="grey")
+                butt[nbrn[x]].config(bg="black")
 
 
 
