@@ -30,6 +30,18 @@ def btn1func():
     r = map.spielerAnReihe()
     provinit()
 
+    #setze Farbe des Rundenbuttons
+    if (r == 1):
+        butt1.config(bg="lightblue")
+    elif (r == 2):
+        butt1.config(bg="yellow")
+    elif (r == 3):
+        butt1.config(bg="orange")
+    elif (r == 4):
+        butt1.config(bg="green")
+
+
+    #waehle passendes Bild fuer Knopf
     if r != aktiverSpieler:
         if r == 1:
             butt1.config(image = imgstart)
@@ -111,6 +123,7 @@ theLabel = Label(root, text="Risiko")
 theLabel.pack()
 
 
+imganfang = PhotoImage(file="..\\karte\\anfang.png")
 imgstart = PhotoImage(file="..\\karte\\start.png")
 imgstart2 = PhotoImage(file="..\\karte\\start2.png")
 imgstart3 = PhotoImage(file="..\\karte\\start3.png")
@@ -119,7 +132,7 @@ imgverst = PhotoImage(file="..\\karte\\verstaerkung.png")
 imgangriff = PhotoImage(file="..\\karte\\angriff.png")
 imgbewegen = PhotoImage(file="..\\karte\\bewegen.png")
 gif1 = PhotoImage(file="..\\karte\\schiessen.gif")
-butt1 = Button(root, image=imgstart, text="start", command= lambda : btn1func())
+butt1 = Button(root, image=imganfang, text="start", command= lambda : btn1func())
 
 butt1.pack()
 
