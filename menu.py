@@ -1,5 +1,6 @@
 import tkinter as tk                # python 3
 from tkinter import font  as tkfont # python 3
+from tkinter.messagebox import *
 #import Tkinter as tk     # python 2
 #import tkFont as tkfont  # python 2
 import socket
@@ -113,7 +114,7 @@ class Host(tk.Frame):
 
 
         button2 = tk.Button(self, text="Server starten",
-                           command=lambda: controller.show_frame("StartPage"))
+                           command=lambda: showinfo("", "Starte Server mit IP " + stest.getsockname()[0] + " : " + textbox.get("1.0", 'end-1c')))
         button2.pack()
 
 
@@ -138,7 +139,7 @@ class Join(tk.Frame):
 
 
         button2 = tk.Button(self, text="Server beitreten",
-                           command=lambda: controller.show_frame("StartPage"))
+                           command=lambda: showinfo("", "Server mit IP " + textbox.get("1.0", 'end-1c') + " : " + textbox2.get("1.0", 'end-1c') + " beitreten"))
         button2.pack()
 
 
@@ -283,7 +284,7 @@ class GuiMap(tk.Frame):
         elif (rueckgabe[0] == "angriff"):
             msg = "Schlacht von " + map.nameVon(zahl)
             print(msg)
-            tk.showinfo("Angriff", msg)
+            showinfo("Angriff", msg)
             self.provinit()
         elif (rueckgabe[0] == "bewegen"):
             self.provinit()
