@@ -6,7 +6,7 @@ from tkinter.messagebox import *
 import socket
 import karte
 
-class SampleApp(tk.Tk):
+class Risiko(tk.Tk):
 
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
@@ -325,5 +325,5 @@ class GuiMap(tk.Frame):
 
 
 if __name__ == "__main__":
-    app = SampleApp()
+    app = Risiko()
     app.mainloop()
