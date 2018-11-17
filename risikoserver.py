@@ -1,30 +1,51 @@
 from tkinter import *
+import sys
 
 """Server-Anwendung"""
 """hier werden beigetretene Spieler und deren Status angezeigt"""
 
 
-
-#beendet den Server
 def servbeenden():
+    """beende den Server"""
     #evtl. noch vorher sockets schliessen
     exit(0)
 
-#startet den Server
+
 def servstarten():
+    """starte den Server"""
+
     pass
 
-#fuege ki an stelle des spielers hinzu
+
 def addKi():
-    addKi.nr+=1
-    if(addKi.nr < 5):
+    """fuege ki an stelle des spielers hinzu"""
+
+
+    if(addKi.nr < 4):
+        addKi.nr += 1
         spielername[addKi.nr-1] = "KI(" + str(addKi.nr) + ")"
+        status[addKi.nr-1] = "beigetreten"
     print(spielername)
     acttable()
+
+
 addKi.nr=1
 
-#aktualisiert tabelleneintraege
+
+def delKi():
+    """entferne KI"""
+    if(addKi.nr > 1):
+        spielername[addKi.nr-1] = "Spieler(" + str(addKi.nr) + ")"
+        status[addKi.nr - 1] = "-"
+        addKi.nr-=1
+    acttable()
+
+
+
+
 def acttable():
+    """aktualisiere tabelleneintraege"""
+
     spieler1.configure(text=spielername[0])
     status1.configure(text=status[0])
     spieler2.configure(text=spielername[1])
@@ -35,15 +56,22 @@ def acttable():
     status4.configure(text=status[3])
 
 
+if len(sys.argv) != 3:
+    exit(1)
+
+ipaddr = str(sys.argv[1])
+port = str(sys.argv[2])
+
+
 gui = Tk()
 gui.title("Risiko Server 0.1")
 #gui.configure(background="black")
 
-
 #kopfzeile
 kopf = Frame(gui)
 Label(kopf, text="                        ").pack(side=LEFT)
-Label(kopf, text="Risiko Server").pack(side=LEFT)
+labelipadr = Label(kopf, text=(ipaddr + ":" + port))
+labelipadr.pack(side=LEFT)
 #Button beenden
 buttbeenden = Button(kopf, text="Server beenden", fg="white", bg="red" , command= lambda : servbeenden())
 buttbeenden.pack(side=LEFT)
@@ -61,7 +89,7 @@ spielername = []
 status = []
 #noch dummy werte
 for x in range(4):
-    spielername.append("spieler(" + str(x+1) + ")")
+    spielername.append("Spieler(" + str(x+1) + ")")
     status.append("-")
 
 Label(zeile, text="Spieler").pack(side=LEFT)
@@ -93,7 +121,10 @@ status4.pack(side = LEFT)
 zeile4.pack()
 
 print(spielername, status)
-Button(tabl, text="+ KI", command=lambda: addKi()).pack()
+zeileki = Frame(tabl)
+Button(zeileki, text="+ KI", command=lambda: addKi()).pack(side=LEFT)
+Button(zeileki, text="- KI", command=lambda: delKi()).pack(side=LEFT)
+zeileki.pack()
 tabl.pack(expand= True)
 
 #Button Spiel starten
