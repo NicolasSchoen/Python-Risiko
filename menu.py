@@ -4,6 +4,8 @@ from tkinter.messagebox import *
 #import Tkinter as tk     # python 2
 #import tkFont as tkfont  # python 2
 import socket
+import os
+import subprocess
 import singleplayer
 import multiplayer
 
@@ -109,6 +111,10 @@ class Host(tk.Frame):
     def serverErstellen(self, port=""):
         if(port.isdigit() and (int(port) > 0 and int(port) < 65537)):
             showinfo("", "Starte Server mit IP " + self.stest.getsockname()[0] + " : " + port)
+            #os.system("python risikoserver.py " + self.stest.getsockname()[0] + " " + port)
+            #erzeuge extra prozess (damit hauptprogramm menu weiterlaeuft und nicht auf beendigung des servers wartet)
+            subprocess.Popen(["python", "risikoserver.py", self.stest.getsockname()[0], port])
+            #os.execv(os.curdir, ["python", "risikoserver.py", self.stest.getsockname()[0], port])
         else:
             showinfo("", "Bitte Port zwischen 1 und 65536 waehlen!")
 
