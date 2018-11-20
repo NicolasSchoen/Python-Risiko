@@ -6,7 +6,6 @@ from tkinter.messagebox import *
 import socket
 import os
 import subprocess
-import singleplayer
 import multiplayer
 
 class Risiko(tk.Tk):
@@ -26,7 +25,7 @@ class Risiko(tk.Tk):
         self.title("Risiko")
 
         self.frames = {}
-        for F in (StartPage, Singleplayer, Multiplayer, Host, singleplayer.GuiSingleplayer, Join, multiplayer.GuiMultiplayer):
+        for F in (StartPage, Singleplayer, Multiplayer, Host, Join, multiplayer.GuiMultiplayer):
             page_name = F.__name__
             frame = F(parent=container, controller=self)
             self.frames[page_name] = frame
@@ -66,6 +65,9 @@ class StartPage(tk.Frame):
 class Singleplayer(tk.Frame):
     """Singleplayer-Auswahl, festlegen der anzahl KI-Gegner und starten des Spiels"""
 
+    def starteSingleplayer(self, anzgegner=""):
+        subprocess.Popen(["python", "singleplayer.py", anzgegner, "1"])
+
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
@@ -75,10 +77,10 @@ class Singleplayer(tk.Frame):
                            command=lambda: controller.show_frame("StartPage"))
         button.pack()
 
-        w = tk.Scale(self, from_=2, to=4, orient="horizontal")
-        w.pack()
+        self.w = tk.Scale(self, from_=2, to=4, orient="horizontal")
+        self.w.pack()
 
-        button2 = tk.Button(self, text="Starte", command=lambda: controller.show_frame("GuiSingleplayer"))
+        button2 = tk.Button(self, text="Starte", command=lambda: self.starteSingleplayer(str(self.w.get())))
         button2.pack()
 
     #def buttonStarte(self):
