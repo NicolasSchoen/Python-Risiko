@@ -6,7 +6,7 @@ from tkinter.messagebox import *
 import socket
 import os
 import subprocess
-import multiplayer
+#import multiplayer
 
 class Risiko(tk.Tk):
 
@@ -25,7 +25,7 @@ class Risiko(tk.Tk):
         self.title("Risiko")
 
         self.frames = {}
-        for F in (StartPage, Singleplayer, Multiplayer, Host, Join, multiplayer.GuiMultiplayer):
+        for F in (StartPage, Singleplayer, Multiplayer, Host, Join):
             page_name = F.__name__
             frame = F(parent=container, controller=self)
             self.frames[page_name] = frame
@@ -73,7 +73,7 @@ class Singleplayer(tk.Frame):
         self.controller = controller
         label = tk.Label(self, text="Singleplayer", font=controller.title_font)
         label.pack(side="top", fill="x", pady=10)
-        button = tk.Button(self, text="Main-Menu",
+        button = tk.Button(self, text="Hauptmenue",
                            command=lambda: controller.show_frame("StartPage"))
         button.pack()
 
@@ -96,7 +96,7 @@ class Multiplayer(tk.Frame):
         self.controller = controller
         label = tk.Label(self, text="Multiplayer", font=controller.title_font)
         label.pack(side="top", fill="x", pady=10)
-        button = tk.Button(self, text="Main-Menu",
+        button = tk.Button(self, text="Hauptmenue",
                            command=lambda: controller.show_frame("StartPage"))
         button.pack()
 
@@ -123,7 +123,7 @@ class Host(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
-        label = tk.Label(self, text="Multiplayer hosten", font=controller.title_font)
+        label = tk.Label(self, text="Spiel erstellen", font=controller.title_font)
         label.pack(side="top", fill="x", pady=10)
         button = tk.Button(self, text="zurueck",
                            command=lambda: controller.show_frame("Multiplayer"))
@@ -157,7 +157,7 @@ class Join(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
-        label = tk.Label(self, text="Multiplayer beitreten", font=controller.title_font)
+        label = tk.Label(self, text="Spiel beitreten", font=controller.title_font)
         label.pack(side="top", fill="x", pady=10)
         button = tk.Button(self, text="zurueck",
                            command=lambda: controller.show_frame("Multiplayer"))
