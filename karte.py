@@ -22,9 +22,11 @@ class Karte:
     def __init__(self, anz=2):
         self.anzSpieler = anz
         self.phase = 0
-        self.spielerDran=0
+        self.spielerDran=-1
         self.verstaerkung=0
         self.provAuswahl=0
+        self.runde=0
+        self.start = True
 
 
     #gibt nachbarn von angegebener provinz als liste zurueck
@@ -149,13 +151,25 @@ class Karte:
 
     #veraendert die Phase, evtl kommt ein neuer Spieler dran
     def drueckeRunde(self):
-        if(self.phase == 3):
+        if(self.runde > 2): #hier Anzahl der Start-Runden festlegen(in denen nur platziert wird)
+            if(self.phase == 3):
+                self.spielerDran = (self.spielerDran + 1) % self.anzSpieler
+                self.phase = 1
+                print("Spieler", self.spielerAnReihe(), "ist an der Reihe")
+            else:
+                self.phase = (self.phase + 1) % 4
+            print(self.phase, self.phasetext[self.phase])
+            self.provAuswahl=0
+            return self.phase
+        else:
+            #nur platzieren moeglich(beim start)
+            self.phase = 1
             self.spielerDran = (self.spielerDran + 1) % self.anzSpieler
-            print("Spieler", self.spielerAnReihe(), "ist an der Reihe")
-        self.phase = (self.phase + 1) % 4
-        print(self.phase, self.phasetext[self.phase])
-        self.provAuswahl=0
-        return self.phase
+            if(self.spielerDran == 0):
+                self.runde += 1
+            print(self.phase, self.phasetext[self.phase])
+            self.provAuswahl = 0
+            return self.phase
 
 
     #legt die startprovinzen fest
