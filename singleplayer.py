@@ -20,6 +20,8 @@ def btn1func():
     r = map.spielerAnReihe()
     provinit()
 
+    labeltext.config(text=" ")
+
     # setze Farbe des Rundenbuttons
     if (r == 1):
         butt1.config(bg="lightblue")
@@ -42,6 +44,7 @@ def btn1func():
             butt1.config(image=imgstart4)
     elif w == 1:
         butt1.config(image=imgverst)
+        labeltext.config(text="noch " + str(map.getVerstaerkung()) + " Einheiten platzieren")
     elif w == 2:
         butt1.config(image=imgangriff)
     elif w == 3:
@@ -61,6 +64,7 @@ def btnprovfunc(zahl):
             elif (map.getPhase()[1] == 3):
                 nachbarnZeigen(2, zahl)
             elif (map.getPhase()[1] == 1):
+                labeltext.config(text="noch " + str(map.getVerstaerkung()) + " Einheiten platzieren")
                 provinit()
     elif (rueckgabe[0] == "angriff"):
         msg = "Schlacht von " + map.nameVon(zahl)
@@ -103,8 +107,8 @@ hoehe = 720
 root = Tk()
 
 
-button = Button(root, text="beenden", command=lambda: exit(0))
-button.pack()
+labeltext = Label(root, text=" ")
+labeltext.pack()
 
 imganfang = PhotoImage(file="..\\karte\\anfang.png")
 imgstart = PhotoImage(file="..\\karte\\start.png")

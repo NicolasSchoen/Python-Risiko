@@ -59,18 +59,32 @@ class Karte:
         return self.spielerDran + 1
 
 
+    def pruefeLand(self):
+        if(self.info[1][1] == self.spielerDran and self.info[2][1] == self.spielerDran and self.info[3][1] == self.spielerDran and self.info[4][1] == self.spielerDran and self.info[5][1] == self.spielerDran and self.info[12][1] == self.spielerDran):
+            self.land[0][1] = self.spielerDran
+
+        if(self.info[9][1] == self.spielerDran and self.info[10][1] == self.spielerDran and self.info[11][1] == self.spielerDran):
+            self.land[1][1] = self.spielerDran
+
+        if(self.info[6][1] == self.spielerDran and self.info[7][1] == self.spielerDran and self.info[8][1] == self.spielerDran):
+            self.land[2][1] = self.spielerDran
+
+
     #gibt die moegliche Anzahl an Verstaerkungs-Einheiten des angegebenen Spielers zurueck
-    def berechneVerstaerkung(self,spieler):
+    def berechneVerstaerkung(self, spieler):
+        self.pruefeLand()
+        spieler = int(spieler) + 1
+        print(spieler)
         provinbesitz=0
         for prov in self.info:
-            if(prov[1] == spieler):
+            if(self.info[prov][1] == spieler):
                 provinbesitz+=1
 
-        verst = round(provinbesitz/3)
+        verst = round(provinbesitz)
 
         for l in self.land:
-            if l[1] == spieler:
-                verst += l[2]
+            if self.land[l][1] == spieler:
+                verst += self.land[l][2]
 
         return verst
 
@@ -82,7 +96,13 @@ class Karte:
 
     #erhoehe die Anzahl der Einheiten der angegebenen Provinz um 1
     def verstaerkeProv(self, numr, anzahl=1):
-        self.info[numr][0] += anzahl
+        if(self.verstaerkung > 0):
+            self.info[numr][0] += anzahl
+            self.verstaerkung -= 1
+
+
+    def getVerstaerkung(self):
+        return self.verstaerkung
 
 
     #bewege 'anzahl' Einheiten von Provinz'von' nach Provinz'nach'
@@ -120,7 +140,6 @@ class Karte:
         if(spielernr == self.spielerAnReihe()):
             #fuehre aktion des spielers aus, der gerade an reihe ist
             if self.phase == 1 and self.info[provnumr][1] == self.spielerAnReihe():
-                #self.verstaerkung = self.berechneVerstaerkung(spielernr)   #wird zu beginn einer runde aufgerufen, nachdem der/die gegner fertig ist/sind
                 self.verstaerkeProv(provnumr)
             elif self.phase == 2:
                 if((not self.eigeneProvinz(provnumr, spielernr)) and self.provAuswahl != 0 and provnumr in self.knotenzahl[self.provAuswahl]):
@@ -158,6 +177,10 @@ class Karte:
                 print("Spieler", self.spielerAnReihe(), "ist an der Reihe")
             else:
                 self.phase = (self.phase + 1) % 4
+
+            if(self.phase == 1):
+                self.verstaerkung = self.berechneVerstaerkung(self.spielerDran)   #wird zu beginn einer runde aufgerufen, nachdem der/die gegner fertig ist/sind
+
             print(self.phase, self.phasetext[self.phase])
             self.provAuswahl=0
             return self.phase
@@ -169,6 +192,8 @@ class Karte:
                 self.runde += 1
             print(self.phase, self.phasetext[self.phase])
             self.provAuswahl = 0
+            self.verstaerkung = self.berechneVerstaerkung(self.spielerDran)  # wird zu beginn einer runde aufgerufen, nachdem der/die gegner fertig ist/sind
+
             return self.phase
 
 
