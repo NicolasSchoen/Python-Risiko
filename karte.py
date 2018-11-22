@@ -1,5 +1,6 @@
 from random import *
 import time
+import schlacht
 
 class Karte:
 
