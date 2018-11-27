@@ -18,10 +18,25 @@ class Karte:
     # "info" : (anzEinheiten, BesitzerId)
     info = {1 : [1,2], 2 : [1,1], 3 : [1,1], 4 : [1,1], 5 : [1,1], 6 : [1,1], 7 : [1,1], 8 : [1,1], 9 : [1,1], 10 : [1,1], 11 : [1,1], 12 : [1,1]}
 
+    spielergueltig = [False, False, False, False]
+
 
     #Konstruktor
     def __init__(self, anz=2):
         self.anzSpieler = anz
+
+        self.spielergueltig[0] = True
+        self.spielergueltig[1] = True
+        if(anz > 2):
+            self.spielergueltig[2] = True
+            if(anz > 3):
+                self.spielergueltig[3] = True
+            else:
+                self.spielergueltig[3] = False
+        else:
+            self.spielergueltig[2] = False
+            self.spielergueltig[3] = False
+
         self.phase = 0
         self.spielerDran=-1
         self.verstaerkung=0
@@ -58,6 +73,25 @@ class Karte:
     #gibt den Spieler zurueck, der gerade an der Reihe ist
     def spielerAnReihe(self):
         return self.spielerDran + 1
+
+
+    #prueft, ob der angegebene Spieler noch ueber Provinzen verfuegt, wenn nein, scheidet er aus dem spiel aus
+    #(durch spieler{nr} = False
+    def pruefeSpielerInSpiel(self, nr=1):
+        val = False
+        for s in self.info:
+            if(self.info[s][1] == nr):
+                val = True
+        print("spieler",nr,val)
+        if(nr == 1):
+            self.spielergueltig[0] = val
+        elif(nr == 2):
+            self.spielergueltig[1] = val
+        elif(nr == 3):
+            self.spielergueltig[2] = val
+        elif(nr == 4):
+            self.spielergueltig[3] = val
+
 
 
     def pruefeLand(self):
@@ -117,12 +151,29 @@ class Karte:
     def angreifen(self, von, nach, anzahl, spieler):
         if(self.info[von][0] > anzahl):
             self.info[von][0] -= anzahl
+            alterbesitzer = self.info[nach][1]
             self.info[nach][1] = spieler
             self.info[nach][0] = anzahl
+            self.pruefeSpielerInSpiel(alterbesitzer)   #pruefe ob spieler noch provinzen hat
 
 
     #TODO
     def verschieben(self, provnr):
+        pass
+
+
+    #TODO Ki platziert Einheiten
+    def ki_platzieren(self):
+        pass
+
+
+    #TODO Ki greift Nacbarprovinz an
+    def ki_angreifen(self):
+        pass
+
+
+    #TODO Ki bewegt Einheiten
+    def ki_bewegen(self):
         pass
 
 
@@ -173,7 +224,10 @@ class Karte:
     def drueckeRunde(self):
         if(self.runde > 2): #hier Anzahl der Start-Runden festlegen(in denen nur platziert wird)
             if(self.phase == 3):
-                self.spielerDran = (self.spielerDran + 1) % self.anzSpieler
+                naechster = (self.spielerDran + 1) % self.anzSpieler
+                while(not self.spielergueltig[naechster]):
+                    naechster = (naechster + 1) % self.anzSpieler
+                self.spielerDran = naechster
                 self.phase = 1
                 print("Spieler", self.spielerAnReihe(), "ist an der Reihe")
             else:

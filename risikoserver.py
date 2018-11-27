@@ -1,4 +1,5 @@
 from tkinter import *
+from tkinter.messagebox import *
 import sys
 
 """Server-Anwendung"""
@@ -13,7 +14,7 @@ def servbeenden():
 
 def servstarten():
     """starte den Server"""
-
+    showinfo("starten nicht moeglich!", "Zu wenige Spieler!")
     pass
 
 
