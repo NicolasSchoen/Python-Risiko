@@ -24,6 +24,7 @@ class Karte:
     #Konstruktor
     def __init__(self, anz=2):
         self.anzSpieler = anz
+        self.aktiveSpieler = anz
 
         self.spielergueltig[0] = True
         self.spielergueltig[1] = True
@@ -65,6 +66,11 @@ class Karte:
         return self.info[knoten][1]
 
 
+    #gibt die noch vorhandenen Spieler aus
+    def getAktiveSpieler(self):
+        return self.aktiveSpieler
+
+
     #gibt den Namen der angegebenen Provinz zurueck
     def nameVon(self, anz=1):
         return self.knotennamen[anz]
@@ -83,6 +89,11 @@ class Karte:
             if(self.info[s][1] == nr):
                 val = True
         print("spieler",nr,val)
+        if(not val):
+            self.aktiveSpieler -=1
+
+        print("aktivespieler:",self.aktiveSpieler)
+
         if(nr == 1):
             self.spielergueltig[0] = val
         elif(nr == 2):
