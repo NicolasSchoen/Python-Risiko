@@ -22,7 +22,8 @@ class Karte:
 
 
     #Konstruktor
-    def __init__(self, anz=2):
+    def __init__(self, anz=2, singlplr = False):
+        self.singleplayer = singlplr
         self.anzSpieler = anz
         self.aktiveSpieler = anz
 
@@ -175,7 +176,17 @@ class Karte:
 
     #TODO Ki platziert Einheiten
     def ki_platzieren(self):
-        pass
+        einheiten = self.berechneVerstaerkung(self.spielerDran)
+        eigeneprovinzen = []
+        for p in self.info:
+            if (self.info[p][1] == self.spielerAnReihe()):
+                eigeneprovinzen.append(p)
+        while(einheiten > 0):
+            indx = randint(0, len(eigeneprovinzen)-1)
+            self.verstaerkeProv(eigeneprovinzen[indx], 1)
+            einheiten -= 1
+
+
 
 
     #TODO Ki greift Nacbarprovinz an
@@ -246,6 +257,8 @@ class Karte:
 
             if(self.phase == 1):
                 self.verstaerkung = self.berechneVerstaerkung(self.spielerDran)   #wird zu beginn einer runde aufgerufen, nachdem der/die gegner fertig ist/sind
+                if(self.spielerDran > 0):
+                    self.ki_platzieren()
 
             print(self.phase, self.phasetext[self.phase])
             self.provAuswahl=0
@@ -259,6 +272,8 @@ class Karte:
             print(self.phase, self.phasetext[self.phase])
             self.provAuswahl = 0
             self.verstaerkung = self.berechneVerstaerkung(self.spielerDran)  # wird zu beginn einer runde aufgerufen, nachdem der/die gegner fertig ist/sind
+            if (self.spielerDran > 0):
+                self.ki_platzieren()
 
             return self.phase
 

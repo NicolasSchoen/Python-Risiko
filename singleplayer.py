@@ -8,7 +8,7 @@ import karte
 #---------------------------------------------------Singleplayer-GUI-----------------------------------------------------------
 """Gui hat direkten Zugriff auf Karte-Klasse"""
 
-map = karte.Karte(int(sys.argv[1]))
+map = karte.Karte(int(sys.argv[1]), True)
 map.felderInitialisieren()
 angriffvon = ""  # Hier wird Provinzid gespeichert, von der Angriff ausgeht
 aktiverSpieler = int(sys.argv[2])
