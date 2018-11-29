@@ -1,6 +1,7 @@
 from random import *
 import time
 import schlacht
+import wuerfel
 
 class Karte:
 
@@ -161,12 +162,62 @@ class Karte:
 
     #TODO 'spieler' greift von Provinz 'von' mit 'anz' Einheiten Provinz 'nach' an
     def angreifen(self, von, nach, anzahl, spieler):
+        print("Greife", self.knotennamen[nach], "von", self.knotennamen[von], "mit", str(anzahl),"Einheiten an")
         if(self.info[von][0] > anzahl):
             self.info[von][0] -= anzahl
-            alterbesitzer = self.info[nach][1]
-            self.info[nach][1] = spieler
-            self.info[nach][0] = anzahl
-            self.pruefeSpielerInSpiel(alterbesitzer)   #pruefe ob spieler noch provinzen hat
+            eeinheiten = anzahl
+            feinheiten = self.info[nach][0]
+            wurfeigen = []
+            wurffeind = []
+
+            while(eeinheiten > 0):
+                #wuerfeln
+                if(eeinheiten >= 3):
+                    wurfeigen = [wuerfel.wuerfeln(1), wuerfel.wuerfeln(1), wuerfel.wuerfeln(1)]
+                elif(eeinheiten == 2):
+                    wurfeigen = [wuerfel.wuerfeln(1),wuerfel.wuerfeln(1)]
+                else:
+                    wurfeigen = [wuerfel.wuerfeln(1)]
+                if(feinheiten >= 2):
+                    wurffeind = [wuerfel.wuerfeln(1), wuerfel.wuerfeln(1)]
+                else:
+                    wurffeind = [wuerfel.wuerfeln(1)]
+
+                #wurf auswerten:
+                wurfeigen = sorted(wurfeigen, reverse=True)
+                wurffeind = sorted(wurffeind, reverse=True)
+
+                print("wurfeigen:",wurfeigen)
+                print("wurffeind:",wurffeind)
+
+                if(wurfeigen[0] > wurffeind[0]):
+                    print("Kampf gewonnen")
+                    feinheiten -= 1
+                else:
+                    print("Kampf verloren")
+                    eeinheiten -= 1
+
+                if(len(wurfeigen) > 1 and len(wurffeind) > 1):
+                    if (wurfeigen[1] > wurffeind[1]):
+                        print("Kampf gewonnen")
+                        feinheiten -= 1
+                    else:
+                        print("Kampf verloren")
+                        eeinheiten -= 1
+
+
+
+                if(feinheiten == 0):
+                    # wenn prov gewonnen
+                    alterbesitzer = self.info[nach][1]
+                    self.info[nach][1] = spieler
+                    self.info[nach][0] = eeinheiten
+                    self.pruefeSpielerInSpiel(alterbesitzer)  # pruefe ob spieler noch provinzen hat
+                    break;
+                else:
+                    self.info[nach][0] = feinheiten
+
+
 
 
     #TODO
@@ -191,7 +242,37 @@ class Karte:
 
     #TODO Ki greift Nacbarprovinz an
     def ki_angreifen(self):
-        pass
+        eigeneprovinzen = []
+        for p in self.info:
+            if (self.info[p][1] == self.spielerAnReihe()):
+                eigeneprovinzen.append(p)
+
+        #bestimme provinz mit maximalen einheiten, die feindl nachbar hat
+        pmax = 0
+        maxeinheiten = 1
+        for p in eigeneprovinzen:
+            if(self.info[p][0] > maxeinheiten):
+                hatfnachbar = False
+                for pn in self.knotenzahl[p]:
+                    if(self.info[pn][1] != self.spielerAnReihe()):
+                        hatfnachbar = True
+                if(hatfnachbar):
+                    pmax = p
+
+        #greife provinz an
+        if(pmax != 0):
+            #waehle zielprovinz
+            fprov = 0
+            for pr in self.knotenzahl[pmax]:
+                if(self.info[pr][1] != self.spielerAnReihe()):
+                    fprov = pr
+
+            einheitenzahl = randint(1, self.info[pmax][0]-1)
+
+            #angriff fertig
+            #print("Greife",self.knotennamen[fprov],"von Provinz",self.knotennamen[pmax],"mit",str(einheitenzahl),"Einheiten an")
+            self.angreifen(pmax, fprov, einheitenzahl, self.spielerAnReihe())
+
 
 
     #TODO Ki bewegt Einheiten
@@ -217,7 +298,12 @@ class Karte:
                 self.verstaerkeProv(provnumr)
             elif self.phase == 2:
                 if((not self.eigeneProvinz(provnumr, spielernr)) and self.provAuswahl != 0 and provnumr in self.knotenzahl[self.provAuswahl]):
-                    self.angreifen(self.provAuswahl, provnumr, 1, spielernr)
+                    einhtn = 1
+                    if(self.info[self.provAuswahl][0] >= 4):
+                        einhtn = 3
+                    elif(self.info[self.provAuswahl][0] == 3):
+                        einhtn = 2
+                    self.angreifen(self.provAuswahl, provnumr, einhtn, spielernr)
                     self.provAuswahl = 0
                     return ["angriff", provnumr]
                 elif(self.eigeneProvinz(provnumr, spielernr)):
@@ -257,8 +343,10 @@ class Karte:
 
             if(self.phase == 1):
                 self.verstaerkung = self.berechneVerstaerkung(self.spielerDran)   #wird zu beginn einer runde aufgerufen, nachdem der/die gegner fertig ist/sind
-                if(self.spielerDran > 0):
+                if(self.singleplayer and self.spielerDran > 0):
                     self.ki_platzieren()
+            if(self.phase == 2 and self.singleplayer and self.spielerDran > 0):
+                self.ki_angreifen()
 
             print(self.phase, self.phasetext[self.phase])
             self.provAuswahl=0
@@ -272,7 +360,7 @@ class Karte:
             print(self.phase, self.phasetext[self.phase])
             self.provAuswahl = 0
             self.verstaerkung = self.berechneVerstaerkung(self.spielerDran)  # wird zu beginn einer runde aufgerufen, nachdem der/die gegner fertig ist/sind
-            if (self.spielerDran > 0):
+            if (self.singleplayer and self.spielerDran > 0):
                 self.ki_platzieren()
 
             return self.phase

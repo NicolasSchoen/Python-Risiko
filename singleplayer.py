@@ -74,6 +74,7 @@ def btnprovfunc(zahl):
         if(map.getAktiveSpieler() == 1):
             print("Spiel zuende") #TODO: geht noch nicht
             showinfo("Ende","Spieler" + str(map.spielerAnReihe()) + "hat gewonnen!")
+            exit(0)
     elif (rueckgabe[0] == "bewegen"):
         provinit()
 
