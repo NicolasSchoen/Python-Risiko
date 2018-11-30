@@ -6,6 +6,7 @@ from tkinter.messagebox import *
 import socket
 import os
 import subprocess
+import sqlite3
 #import multiplayer
 
 class Risiko(tk.Tk):
@@ -25,7 +26,7 @@ class Risiko(tk.Tk):
         self.title("Risiko")
 
         self.frames = {}
-        for F in (StartPage, Singleplayer, Multiplayer, Host, Join):
+        for F in (StartPage, Singleplayer, Multiplayer, Highscore, Host, Join):
             page_name = F.__name__
             frame = F(parent=container, controller=self)
             self.frames[page_name] = frame
@@ -58,8 +59,10 @@ class StartPage(tk.Frame):
                             command=lambda: controller.show_frame("Singleplayer"))
         button2 = tk.Button(self, text="Multiplayer",
                             command=lambda: controller.show_frame("Multiplayer"))
+        button3 = tk.Button(self, text="Highscore", command=lambda: controller.show_frame("Highscore"))
         button1.pack()
         button2.pack()
+        button3.pack()
 
 
 class Singleplayer(tk.Frame):
@@ -105,6 +108,46 @@ class Multiplayer(tk.Frame):
 
         button3 = tk.Button(self, text="Spiel erstellen", command=lambda: controller.show_frame("Host"))
         button3.pack()
+
+
+class Highscore(tk.Frame):
+    """Multiplayer Auswahl, wahl zwischen beitreten und hosten"""
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        self.controller = controller
+        label = tk.Label(self, text="Highscore", font=controller.title_font)
+        label.pack(side="top", fill="x", pady=10)
+        button = tk.Button(self, text="Hauptmenue",
+                           command=lambda: controller.show_frame("StartPage"))
+        button.pack()
+
+        button2 = tk.Button(self, text="aktualisieren", command=lambda: self.showHighscore())
+        button2.pack()
+
+        self.hscore = tk.Label(self, text="")
+        self.hscore.pack()
+
+
+    def showHighscore(self):
+        hs = "Top 10 Ergebnisse:\n"
+        conn = sqlite3.connect('risiko.db')
+        c = conn.cursor()
+        #c.execute('''CREATE TABLE highscore
+        #            (datum text, score int)''')
+
+        rang=1
+        for row in c.execute("SELECT score FROM highscore ORDER BY highscore.score DESC"):
+            print(row)
+            if(rang <= 10):
+                hs += str(rang) + ": " + str(row) + "\n"
+            rang += 1
+
+        conn.commit()
+        conn.close()
+
+
+        self.hscore.config(text=hs)
 
 
 class Host(tk.Frame):

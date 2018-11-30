@@ -3,6 +3,8 @@ from tkinter import *
 from tkinter.messagebox import *
 import sys
 import karte
+import time
+import sqlite3
 
 
 #---------------------------------------------------Singleplayer-GUI-----------------------------------------------------------
@@ -80,7 +82,18 @@ def btnprovfunc(zahl):
         provinit()
         if(map.getAktiveSpieler() == 1):
             print("Spiel zuende") #TODO: geht noch nicht
-            showinfo("Ende","Spieler" + str(map.spielerAnReihe()) + "hat gewonnen!")
+            showinfo("Ende","Spieler" + str(map.spielerAnReihe()) + "hat gewonnen!\nHighscore:" + str(map.calculateScore()))
+
+            #Highscore in Datenbank speichern
+            conn = sqlite3.connect('risiko.db')
+            c = conn.cursor()
+            commnd = "INSERT INTO highscore VALUES ('" + str(time.time()) + "','" + str(map.calculateScore()) + "')"
+            c.execute(commnd)
+            conn.commit()
+            conn.close()
+            print("Highscore erfolgreich in Datenbank gespeichert!")
+
+            #Programm beenden
             exit(0)
     elif (rueckgabe[0] == "bewegen"):
         provinit()

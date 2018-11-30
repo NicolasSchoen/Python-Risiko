@@ -78,6 +78,20 @@ class Karte:
         return self.knotennamen[anz]
 
 
+    #zaehlt die verbliebenen Einheiten
+    def zaehleEinheiten(self):
+        einh=0
+        for p in self.info:
+            einh += self.info[p][0]
+        return einh
+
+
+    #berechnet den Score und gibt ihn zurueck
+    def calculateScore(self):
+        score = self.zaehleEinheiten() - self.runde
+        return score
+
+
     #gibt den Spieler zurueck, der gerade an der Reihe ist
     def spielerAnReihe(self):
         return self.spielerDran + 1
