@@ -54,6 +54,13 @@ def btnprovfunc(zahl):
     provinit()
 
     rueckgabe = map.drueckeKnopf(zahl, aktiverSpieler)
+
+    if (map.getAktiveSpieler() == 1 and map.spielerAnReihe() != 1):
+        print("Spiel zuende")  # TODO: geht noch nicht
+        showinfo("Ende", "Verloren!")
+        exit(0)
+
+
     if (rueckgabe == None):
 
         print("Phase:", map.getPhase())
@@ -69,7 +76,7 @@ def btnprovfunc(zahl):
     elif (rueckgabe[0] == "angriff"):
         msg = "Schlacht von " + map.nameVon(zahl)
         print(msg)
-        showinfo("Angriff", msg)
+        #showinfo("Angriff", msg)
         provinit()
         if(map.getAktiveSpieler() == 1):
             print("Spiel zuende") #TODO: geht noch nicht

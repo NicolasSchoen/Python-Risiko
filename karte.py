@@ -234,8 +234,16 @@ class Karte:
                 eigeneprovinzen.append(p)
         while(einheiten > 0):
             indx = randint(0, len(eigeneprovinzen)-1)
-            self.verstaerkeProv(eigeneprovinzen[indx], 1)
-            einheiten -= 1
+            nachbarn = self.nachbarn(eigeneprovinzen[indx])
+            dieseprov = False
+            for n in nachbarn:
+                if(self.info[n][1] != self.spielerAnReihe()):
+                    dieseprov = True
+
+            if(dieseprov):
+                self.verstaerkeProv(eigeneprovinzen[indx], 1)
+                einheiten -= 1
+
 
 
 
@@ -277,7 +285,28 @@ class Karte:
 
     #TODO Ki bewegt Einheiten
     def ki_bewegen(self):
-        pass
+        eigeneprovinzen = []
+        for p in self.info:
+            if (self.info[p][1] == self.spielerAnReihe()):
+                eigeneprovinzen.append(p)
+
+        zielprov = 0
+        for p in eigeneprovinzen:
+            hatgrenze = False
+            for n in self.nachbarn(p):
+                if(self.info[n][1] != self.spielerAnReihe()):
+                    hatgrenze = True
+            if(not hatgrenze):
+                zielprov = p
+
+        #wenn provinz gefunden und mehr als eine einheit darin:
+        if(zielprov != 0 and self.info[zielprov][0] > 1):
+            nachbrn = self.nachbarn(zielprov)
+            print("nachbarn",nachbrn)
+            nbr = randint(0,len(nachbrn)-1)
+            print("nbr",nbr)
+            anzeinheiten = randint(0, self.info[zielprov][0]-1)
+            self.bewege(zielprov,nachbrn[nbr],anzeinheiten)
 
 
     #gibt zurueck, ob die angegebene Provinz dem Spieler gehoert
@@ -346,7 +375,16 @@ class Karte:
                 if(self.singleplayer and self.spielerDran > 0):
                     self.ki_platzieren()
             if(self.phase == 2 and self.singleplayer and self.spielerDran > 0):
-                self.ki_angreifen()
+                anzangriffe = randint(1,10)
+                for i in range(anzangriffe):
+                    print("Greife zum",i,". mal an")
+                    self.ki_angreifen()
+
+            if (self.phase == 3 and self.singleplayer and self.spielerDran > 0):
+                anzbewegen = randint(20, 50)
+                for i in range(anzbewegen):
+                    print("Bewege Truppen")
+                    self.ki_bewegen()
 
             print(self.phase, self.phasetext[self.phase])
             self.provAuswahl=0
