@@ -68,6 +68,11 @@ class Karte:
         return self.info[knoten][1]
 
 
+    #gibt Einheiten der angegebenen Provinz zurueck
+    def getTruppen(self, knoten):
+        return self.info[knoten][0]
+
+
     #gibt die noch vorhandenen Spieler aus
     def getAktiveSpieler(self):
         return self.aktiveSpieler
@@ -333,7 +338,7 @@ class Karte:
 
 
     #schnittstelle der Provinzauswahl
-    def drueckeKnopf(self, provnumr, spielernr):
+    def drueckeKnopf(self, provnumr, spielernr, truppen=0):
         #assert (isinstance(int, numr) and (numr<= 12 and numr > 0)), "Fehlerhafte Provinz gewaehlt"
         if(spielernr == self.spielerAnReihe()):
             #fuehre aktion des spielers aus, der gerade an reihe ist
@@ -343,9 +348,11 @@ class Karte:
                 if((not self.eigeneProvinz(provnumr, spielernr)) and self.provAuswahl != 0 and provnumr in self.knotenzahl[self.provAuswahl]):
                     einhtn = 1
                     if(self.info[self.provAuswahl][0] >= 4):
-                        einhtn = 3
+                        #einhtn = 3
+                        einhtn = truppen
                     elif(self.info[self.provAuswahl][0] == 3):
-                        einhtn = 2
+                        #einhtn = 2
+                        einhtn = truppen
                     self.angreifen(self.provAuswahl, provnumr, einhtn, spielernr)
                     self.provAuswahl = 0
                     return ["angriff", provnumr]
@@ -353,7 +360,7 @@ class Karte:
                     self.provAuswahl = provnumr
             elif self.phase == 3:
                 if ((self.eigeneProvinz(provnumr, spielernr)) and self.provAuswahl != 0 and provnumr in self.knotenzahl[self.provAuswahl]):
-                    self.bewege(self.provAuswahl,provnumr)
+                    self.bewege(self.provAuswahl,provnumr, truppen)
                     self.provAuswahl = 0
                     return ["bewegen", provnumr]
                 elif (self.eigeneProvinz(provnumr, spielernr)):

@@ -14,10 +14,17 @@ map = karte.Karte(int(sys.argv[1]), True)
 map.felderInitialisieren()
 angriffvon = ""  # Hier wird Provinzid gespeichert, von der Angriff ausgeht
 aktiverSpieler = int(sys.argv[2])
+letzteTruppen = 0
 
 
 
 def btn1func():
+    #beende Spiel, wenn Spieler verloren hat
+    if (map.getAktiveSpieler() == 1 and map.spielerAnReihe() != 1):
+        print("Spiel zuende")  # TODO: geht noch nicht
+        showinfo("Ende", "Verloren!")
+        exit(0)
+
     w = map.drueckeRunde()
     r = map.spielerAnReihe()
     provinit()
@@ -48,19 +55,22 @@ def btn1func():
         butt1.config(image=imgverst)
         labeltext.config(text="noch " + str(map.getVerstaerkung()) + " Einheiten platzieren")
     elif w == 2:
+        labeltext.config(text="Angriff mit #Einheiten")
         butt1.config(image=imgangriff)
     elif w == 3:
+        labeltext.config(text="Bewegen von #Einheiten")
         butt1.config(image=imgbewegen)
 
 def btnprovfunc(zahl):
     provinit()
+    global  letzteTruppen
 
-    rueckgabe = map.drueckeKnopf(zahl, aktiverSpieler)
+    rueckgabe = map.drueckeKnopf(zahl, aktiverSpieler, slider.get())
 
-    if (map.getAktiveSpieler() == 1 and map.spielerAnReihe() != 1):
-        print("Spiel zuende")  # TODO: geht noch nicht
-        showinfo("Ende", "Verloren!")
-        exit(0)
+    letzteTruppen = map.getTruppen(zahl)
+    if letzteTruppen == 1:
+        letzteTruppen += 1
+    slider.config(to=letzteTruppen - 1)
 
 
     if (rueckgabe == None):
@@ -98,6 +108,7 @@ def btnprovfunc(zahl):
     elif (rueckgabe[0] == "bewegen"):
         provinit()
 
+
 def provinit():
     for x in range(13):
         if x != 0:
@@ -130,9 +141,12 @@ hoehe = 720
 
 root = Tk()
 
-
-labeltext = Label(root, text=" ")
-labeltext.pack()
+kopf = Frame(root)
+labeltext = Label(kopf, text=" ")
+labeltext.pack(side=LEFT)
+slider = Scale(kopf, from_=1, to=1, orient="horizontal")
+slider.pack(side=LEFT)
+kopf.pack()
 
 imganfang = PhotoImage(file="..\\karte\\anfang.png")
 imgstart = PhotoImage(file="..\\karte\\start.png")
@@ -144,7 +158,6 @@ imgangriff = PhotoImage(file="..\\karte\\angriff.png")
 imgbewegen = PhotoImage(file="..\\karte\\bewegen.png")
 gif1 = PhotoImage(file="..\\karte\\schiessen.gif")
 butt1 = Button(root, image=imganfang, text="start", command=lambda: btn1func())
-
 butt1.pack()
 
 C = Canvas(root, height=hoehe, width=breite)
@@ -154,46 +167,47 @@ img = PhotoImage(file="..\\karte\\map_small.png")
 C.create_image(0, 0, anchor=NW, image=img)
 C.pack()
 
+yoffset = 20
 # absolute platzierung der provinz-buttons
 #########################################################################################
 butt = [Button(), Button(), Button(), Button(), Button(), Button(), Button(), Button(), Button(), Button(),
         Button(), Button(), Button()]
 # provinz1
 butt[1] = Button(root, bg="blue", text="1", command=lambda: btnprovfunc(1))
-butt[1].place(x=135, y=180)
+butt[1].place(x=135, y=180+yoffset)
 # provinz2
 butt[2] = Button(root, bg="blue", text="1", command=lambda: btnprovfunc(2))
-butt[2].place(x=70, y=220)
+butt[2].place(x=70, y=220+yoffset)
 # provinz3
 butt[3] = Button(root, bg="blue", text="1", command=lambda: btnprovfunc(3))
-butt[3].place(x=135, y=280)
+butt[3].place(x=135, y=280+yoffset)
 # provinz4
 butt[4] = Button(root, bg="blue", text="1", command=lambda: btnprovfunc(4))
-butt[4].place(x=120, y=350)
+butt[4].place(x=120, y=350+yoffset)
 # provinz5
 butt[5] = Button(root, bg="blue", text="1", command=lambda: btnprovfunc(5))
-butt[5].place(x=250, y=480)
+butt[5].place(x=250, y=480+yoffset)
 # provinz6
 butt[6] = Button(root, bg="blue", text="1", command=lambda: btnprovfunc(6))
-butt[6].place(x=450, y=250)
+butt[6].place(x=450, y=250+yoffset)
 # provinz7
 butt[7] = Button(root, bg="blue", text="1", command=lambda: btnprovfunc(7))
-butt[7].place(x=650, y=400)
+butt[7].place(x=650, y=400+yoffset)
 # provinz8
 butt[8] = Button(root, bg="blue", text="1", command=lambda: btnprovfunc(8))
-butt[8].place(x=500, y=405)
+butt[8].place(x=500, y=405+yoffset)
 # provinz9
 butt[9] = Button(root, bg="blue", text="1", command=lambda: btnprovfunc(9))
-butt[9].place(x=550, y=610)
+butt[9].place(x=550, y=610+yoffset)
 # provinz10
 butt[10] = Button(root, bg="blue", text="1", command=lambda: btnprovfunc(10))
-butt[10].place(x=400, y=650)
+butt[10].place(x=400, y=650+yoffset)
 # provinz11
 butt[11] = Button(root, bg="blue", text="1", command=lambda: btnprovfunc(11))
-butt[11].place(x=200, y=650)
+butt[11].place(x=200, y=650+yoffset)
 # provinz12
 butt[12] = Button(root, bg="blue", text="1", command=lambda: btnprovfunc(12))
-butt[12].place(x=220, y=150)
+butt[12].place(x=220, y=150+yoffset)
 
 provinit()
 root.mainloop()
