@@ -63,7 +63,7 @@ if len(sys.argv) != 3:
 ipaddr = str(sys.argv[1])
 port = str(sys.argv[2])
 
-
+############################################################################################GUI-Design##################
 gui = Tk()
 gui.title("Risiko Server 0.1")
 #gui.configure(background="black")

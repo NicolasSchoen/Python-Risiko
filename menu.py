@@ -155,7 +155,7 @@ class Host(tk.Frame):
 
     def serverErstellen(self, port=""):
         if(port.isdigit() and (int(port) > 0 and int(port) < 65537)):
-            showinfo("", "Starte Server mit IP " + self.stest.getsockname()[0] + " : " + port)
+            #showinfo("", "Starte Server mit IP " + self.stest.getsockname()[0] + " : " + port)
             #os.system("python risikoserver.py " + self.stest.getsockname()[0] + " " + port)
             #erzeuge extra prozess (damit hauptprogramm menu weiterlaeuft und nicht auf beendigung des servers wartet)
             subprocess.Popen(["python", "risikoserver.py", self.stest.getsockname()[0], port])
