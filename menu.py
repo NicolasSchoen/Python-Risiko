@@ -191,9 +191,11 @@ class Host(tk.Frame):
 class Join(tk.Frame):
     """spiel beitreten, angabe der ip-adresse und des ports"""
 
+
     def spielBeitreten(self, ipadr="", port=""):
-        if (port.isdigit() and (int(port) > 0 and int(port) < 65537)):
-            showinfo("", "Server mit IP " + ipadr + " : " + port + " beitreten")
+        if (ipadr and port.isdigit() and (int(port) > 0 and int(port) < 65537)):
+            #showinfo("", "Server mit IP " + ipadr + " : " + port + " beitreten")
+            subprocess.Popen(["python", "multiplayer.py", str(ipadr), str(port)])
         else:
             showinfo("", "Bitte Port zwischen 1 und 65536 waehlen!")
 

@@ -1,6 +1,8 @@
 from tkinter import *
 from tkinter.messagebox import *
 import sys
+import socket
+import threading
 
 """Server-Anwendung"""
 """hier werden beigetretene Spieler und deren Status angezeigt"""
@@ -12,8 +14,36 @@ def servbeenden():
     exit(0)
 
 
+def waitForPlayers():
+    """warte, bis spieler beitreten, unterbrochen durch 'beenden' und 'starten'"""
+    global  beigetreten
+    while True:
+        print("Warte auf spieler")
+        client, addr = serverSocket.accept()
+        sentence = client.recv(1024).decode()
+        if(sentence == "liketojoin"):
+            if(beigetreten > 3):
+                client.send("voll".encode())
+                client.close()
+            else:
+                status[beigetreten] = "beigetreten"
+                beigetreten +=1
+                acttable()
+                sendtext = "ok:" + str(beigetreten)
+                client.send(sendtext.encode())
+                threading.Thread(target=idleplayer, args=(beigetreten, client)).start()
+    pass
+
+
+def idleplayer(spieler, ssocket):
+    print("schliesse spieler",spieler)
+    ssocket.close()
+    """laeuft, solange spiel laeuft, managt einen spieler"""
+    pass
+
+
 def servstarten():
-    """starte den Server"""
+    """starte das Spiel"""
     showinfo("starten nicht moeglich!", "Zu wenige Spieler!")
     pass
 
@@ -21,24 +51,22 @@ def servstarten():
 def addKi():
     """fuege ki an stelle des spielers hinzu"""
 
-
-    if(addKi.nr < 4):
-        addKi.nr += 1
-        spielername[addKi.nr-1] = "KI(" + str(addKi.nr) + ")"
-        status[addKi.nr-1] = "beigetreten"
+    global beigetreten
+    if(beigetreten < 4):
+        beigetreten += 1
+        spielername[beigetreten-1] = "KI(" + str(beigetreten) + ")"
+        status[beigetreten-1] = "beigetreten"
     print(spielername)
     acttable()
 
 
-addKi.nr=1
-
-
 def delKi():
     """entferne KI"""
-    if(addKi.nr > 1):
-        spielername[addKi.nr-1] = "Spieler(" + str(addKi.nr) + ")"
-        status[addKi.nr - 1] = "-"
-        addKi.nr-=1
+    global beigetreten
+    if(beigetreten > 1):
+        spielername[beigetreten-1] = "Spieler(" + str(beigetreten) + ")"
+        status[beigetreten - 1] = "-"
+        beigetreten-=1
     acttable()
 
 
@@ -60,8 +88,14 @@ def acttable():
 if len(sys.argv) != 3:
     exit(1)
 
+#server konfigurieren und starten
 ipaddr = str(sys.argv[1])
-port = str(sys.argv[2])
+port = int(sys.argv[2])
+serverSocket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+serverSocket.bind(('',port))
+serverSocket.listen(1)
+print("Server gestartet!")
+threading.Thread(target=waitForPlayers).start()
 
 ############################################################################################GUI-Design##################
 gui = Tk()
@@ -71,7 +105,7 @@ gui.title("Risiko Server 0.1")
 #kopfzeile
 kopf = Frame(gui)
 Label(kopf, text="                        ").pack(side=LEFT)
-labelipadr = Label(kopf, text=(ipaddr + ":" + port))
+labelipadr = Label(kopf, text=(ipaddr + ":" + str(port)))
 labelipadr.pack(side=LEFT)
 #Button beenden
 buttbeenden = Button(kopf, text="Server beenden", fg="white", bg="red" , command= lambda : servbeenden())
@@ -88,6 +122,7 @@ zeile3 = Frame(tabl)
 zeile4 = Frame(tabl)
 spielername = []
 status = []
+beigetreten = 0
 #noch dummy werte
 for x in range(4):
     spielername.append("Spieler(" + str(x+1) + ")")
