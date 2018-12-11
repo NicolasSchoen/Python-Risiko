@@ -42,8 +42,10 @@ def waitForPlayers():
 def idleplayer(spieler, ssocket):
     while(serverRunning):
         #bearbeite spieleranfragen
+        print("Bearbeite Spieler",str(spieler))
         pass
-    print("schliesse spieler",spieler)
+    print("schliesse spieler",str(spieler))
+    ssocket.send("exit")
     ssocket.close()
     """laeuft, solange spiel laeuft, managt einen spieler"""
     pass

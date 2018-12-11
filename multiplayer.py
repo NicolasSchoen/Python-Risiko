@@ -3,6 +3,7 @@ from tkinter import *
 from tkinter.messagebox import *
 import sys
 import time
+import threading
 import sqlite3
 import socket
 
@@ -79,6 +80,15 @@ def provinit():
 
 def nachbarnZeigen(modus, provid):  # modus = 1|2: angriff oder bewegen; privid = Provinz
     pass
+
+#thread des spieler
+def idleplayer():
+    while True:
+        antwort = clientSocket.recv(1024).decode()
+        if(antwort == 'exit'):
+            print("Beende")
+            exit(0)
+        #clientSocket.send(nachricht.encode())
 
 
 ##Start der Gui-initialisierung
@@ -173,6 +183,7 @@ if(len(antwort) == 4 and antwort[0] == 'o' and antwort[1] == 'k'):
     aktiverSpieler = int(antwort[3])
     print("SPIELER =",aktiverSpieler)
     root.title("Risiko Multiplayer, als Spieler " + str(aktiverSpieler) + " beigetreten")
+    threading._start_new_thread(idleplayer,())
 else:
     showerror("Fehler", "Server voll!")
     exit(2)
