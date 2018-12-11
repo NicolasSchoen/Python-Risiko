@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter.messagebox import *
 import sys
+import time
 import socket
 import threading
 
@@ -10,14 +11,17 @@ import threading
 
 def servbeenden():
     """beende den Server"""
-    #evtl. noch vorher sockets schliessen
+    serverRunning = False
+    print("Beende Server")
+    time.sleep(1)
+    #serverSocket.close()
     exit(0)
 
 
 def waitForPlayers():
     """warte, bis spieler beitreten, unterbrochen durch 'beenden' und 'starten'"""
     global  beigetreten
-    while True:
+    while serverRunning:
         print("Warte auf spieler")
         client, addr = serverSocket.accept()
         sentence = client.recv(1024).decode()
@@ -31,11 +35,14 @@ def waitForPlayers():
                 acttable()
                 sendtext = "ok:" + str(beigetreten)
                 client.send(sendtext.encode())
-                threading.Thread(target=idleplayer, args=(beigetreten, client)).start()
-    pass
+                #threading.Thread(target=idleplayer, args=(beigetreten, client)).start()
+                threading._start_new_thread(idleplayer,(beigetreten,client,))
 
 
 def idleplayer(spieler, ssocket):
+    while(serverRunning):
+        #bearbeite spieleranfragen
+        pass
     print("schliesse spieler",spieler)
     ssocket.close()
     """laeuft, solange spiel laeuft, managt einen spieler"""
@@ -88,6 +95,9 @@ def acttable():
 if len(sys.argv) != 3:
     exit(1)
 
+beigetreten = 0
+serverRunning = True
+
 #server konfigurieren und starten
 ipaddr = str(sys.argv[1])
 port = int(sys.argv[2])
@@ -95,7 +105,8 @@ serverSocket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 serverSocket.bind(('',port))
 serverSocket.listen(1)
 print("Server gestartet!")
-threading.Thread(target=waitForPlayers).start()
+#threading.Thread(target=waitForPlayers).start()
+threading._start_new_thread(waitForPlayers,())
 
 ############################################################################################GUI-Design##################
 gui = Tk()
@@ -122,7 +133,6 @@ zeile3 = Frame(tabl)
 zeile4 = Frame(tabl)
 spielername = []
 status = []
-beigetreten = 0
 #noch dummy werte
 for x in range(4):
     spielername.append("Spieler(" + str(x+1) + ")")
