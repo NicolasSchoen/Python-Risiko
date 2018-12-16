@@ -11,6 +11,8 @@ import threading
 
 def servbeenden():
     """beende den Server"""
+    global serverRunning
+
     serverRunning = False
     print("Beende Server")
     time.sleep(1)
@@ -20,7 +22,9 @@ def servbeenden():
 
 def waitForPlayers():
     """warte, bis spieler beitreten, unterbrochen durch 'beenden' und 'starten'"""
-    global  beigetreten
+    global beigetreten
+    global serverRunning
+
     while serverRunning:
         print("Warte auf spieler")
         client, addr = serverSocket.accept()
@@ -33,19 +37,23 @@ def waitForPlayers():
                 status[beigetreten] = "beigetreten"
                 beigetreten +=1
                 acttable()
-                sendtext = "ok:" + str(beigetreten)
-                client.send(sendtext.encode())
+                #sendtext = "ok:" + str(beigetreten)
+                #client.send(sendtext.encode())
                 #threading.Thread(target=idleplayer, args=(beigetreten, client)).start()
                 threading._start_new_thread(idleplayer,(beigetreten,client,))
 
 
 def idleplayer(spieler, ssocket):
+    global serverRunning
+
+    sendtext = "ok:" + str(spieler)
+    ssocket.send(sendtext.encode())
     while(serverRunning):
         #bearbeite spieleranfragen
         print("Bearbeite Spieler",str(spieler))
         pass
     print("schliesse spieler",str(spieler))
-    ssocket.send("exit")
+    ssocket.send("exit".encode())
     ssocket.close()
     """laeuft, solange spiel laeuft, managt einen spieler"""
     pass

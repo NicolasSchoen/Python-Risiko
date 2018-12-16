@@ -13,6 +13,7 @@ import socket
 
 aktiverSpieler = 0          #vom server zugewiesen
 letzteTruppen = 0
+istDran = False
 if(len(sys.argv) != 3):
     showerror("Fehler","nicht 2 Argumente angegeben!")
     exit(1)
@@ -24,45 +25,48 @@ port = int(sys.argv[2])
 
 
 def btn1func():
-    #beende Spiel, wenn Spieler verloren hat
-    provinit()
+    if(istDran):
+        #beende Spiel, wenn Spieler verloren hat
+        provinit()
 
-    labeltext.config(text=" ")
-    r=1                                                                     #!Dummy
-    w=0                                                                     #!Dummy
+        labeltext.config(text=" ")
+        r=1                                                                     #!Dummy
+        w=0                                                                     #!Dummy
 
-    # setze Farbe des Rundenbuttons
-    if (r == 1):
-        butt1.config(bg="lightblue")
-    elif (r == 2):
-        butt1.config(bg="yellow")
-    elif (r == 3):
-        butt1.config(bg="orange")
-    elif (r == 4):
-        butt1.config(bg="green")
+        # setze Farbe des Rundenbuttons
+        if (r == 1):
+            butt1.config(bg="lightblue")
+        elif (r == 2):
+            butt1.config(bg="yellow")
+        elif (r == 3):
+            butt1.config(bg="orange")
+        elif (r == 4):
+            butt1.config(bg="green")
 
-    # waehle passendes Bild fuer Knopf
-    if r != aktiverSpieler:
-        if r == 1:
-            butt1.config(image=imgstart)
-        elif r == 2:
-            butt1.config(image=imgstart2)
-        elif r == 3:
-            butt1.config(image=imgstart3)
-        elif r == 4:
-            butt1.config(image=imgstart4)
-    elif w == 1:
-        butt1.config(image=imgverst)
-        labeltext.config(text="noch " + str(map.getVerstaerkung()) + " Einheiten platzieren")
-    elif w == 2:
-        labeltext.config(text="Angriff mit #Einheiten")
-        butt1.config(image=imgangriff)
-    elif w == 3:
-        labeltext.config(text="Bewegen von #Einheiten")
-        butt1.config(image=imgbewegen)
+        # waehle passendes Bild fuer Knopf
+        if r != aktiverSpieler:
+            if r == 1:
+                butt1.config(image=imgstart)
+            elif r == 2:
+                butt1.config(image=imgstart2)
+            elif r == 3:
+                butt1.config(image=imgstart3)
+            elif r == 4:
+                butt1.config(image=imgstart4)
+        elif w == 1:
+            butt1.config(image=imgverst)
+            labeltext.config(text="noch " + str(map.getVerstaerkung()) + " Einheiten platzieren")
+        elif w == 2:
+            labeltext.config(text="Angriff mit #Einheiten")
+            butt1.config(image=imgangriff)
+        elif w == 3:
+            labeltext.config(text="Bewegen von #Einheiten")
+            butt1.config(image=imgbewegen)
 
 def btnprovfunc(zahl):
-    provinit()
+    global istDran
+    if(istDran):
+        provinit()
 
 
 def provinit():
@@ -83,12 +87,17 @@ def nachbarnZeigen(modus, provid):  # modus = 1|2: angriff oder bewegen; privid 
 
 #thread des spieler
 def idleplayer():
+    global istDran
+
     while True:
         antwort = clientSocket.recv(1024).decode()
         if(antwort == 'exit'):
             print("Beende")
-            exit(0)
+            istDran = False
+            showinfo("", "Server wurde beendet, du kannst nun das Spiel schliessen!")
+            break
         #clientSocket.send(nachricht.encode())
+    exit(0)
 
 
 ##Start der Gui-initialisierung
