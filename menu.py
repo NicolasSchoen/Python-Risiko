@@ -137,10 +137,10 @@ class Highscore(tk.Frame):
         #            (datum text, score int)''')
 
         rang=1
-        for row in c.execute("SELECT score FROM highscore ORDER BY highscore.score DESC"):
+        for row in c.execute("SELECT score FROM highscore ORDER BY highscore.score DESC limit 10"):
             print(row)
             if(rang <= 10):
-                hs += str(rang) + ": " + str(row) + "\n"
+                hs += str(rang) + ": " + str(row[0]) + "\n"
             rang += 1
 
         conn.commit()
