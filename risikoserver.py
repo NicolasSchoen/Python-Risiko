@@ -4,6 +4,7 @@ import sys
 import time
 import socket
 import threading
+import karte
 
 """Server-Anwendung"""
 """hier werden beigetretene Spieler und deren Status angezeigt"""
@@ -15,7 +16,7 @@ def servbeenden():
 
     serverRunning = False
     print("Beende Server")
-    time.sleep(1)
+    time.sleep(2)
     #serverSocket.close()
     exit(0)
 
@@ -45,14 +46,23 @@ def waitForPlayers():
 
 def idleplayer(spieler, ssocket):
     global serverRunning
+    global spielLaeuft
+    global map
 
     sendtext = "ok:" + str(spieler)
     ssocket.send(sendtext.encode())
     while(serverRunning):
         #bearbeite spieleranfragen
-        print("Bearbeite Spieler",str(spieler))
-        pass
+        if(spielLaeuft):
+            msg = ssocket.recv(1024).decode()
+            if(msg == 'info'):
+                ssocket.send(mapToString().encode())
+            #time.sleep(1)
+        else:
+            time.sleep(1)
+            print("player-thread",spieler,"waiting")
     print("schliesse spieler",str(spieler))
+    ssocket.recv(1024).decode()
     ssocket.send("exit".encode())
     ssocket.close()
     """laeuft, solange spiel laeuft, managt einen spieler"""
@@ -61,8 +71,32 @@ def idleplayer(spieler, ssocket):
 
 def servstarten():
     """starte das Spiel"""
-    showinfo("starten nicht moeglich!", "Zu wenige Spieler!")
-    pass
+    global beigetreten
+    global spielLaeuft
+    global map
+
+    if(beigetreten > 1):
+        map = karte.Karte(beigetreten)
+        map.felderInitialisieren()
+        map.drueckeRunde()
+        spielLaeuft = True
+        mapToString()
+    else:
+        showinfo("starten nicht moeglich!", "Zu wenige Spieler!")
+
+
+def mapToString():
+    global map
+
+    info = map.getMap()
+    # "info" : (anzEinheiten, BesitzerId)
+    #info = {1: [1, 2], 2: [1, 1], 3: [1, 1], 4: [1, 1], 5: [1, 1], 6: [1, 1], 7: [1, 1], 8: [1, 1], 9: [1, 1],
+    #        10: [1, 1], 11: [1, 1], 12: [1, 1]}
+    mapstr = "1," + str(map.spielerAnReihe()) + "," + str(map.getPhase()[1]) + "," + str(map.getVerstaerkung())
+    for p in range(12):
+        mapstr += ":" + str(info[p+1][0]) + "," + str(info[p+1][1])
+    #output = 1,'spielerdran','phase','verstaerkung':1,2:1,2:1,2:1,2:1,2:1,1:1,1:1,2:1,1:1,1:1,1:1,1
+    return mapstr
 
 
 def addKi():
@@ -107,6 +141,8 @@ if len(sys.argv) != 3:
 
 beigetreten = 0
 serverRunning = True
+spielLaeuft = False
+#map = karte.Karte()
 
 #server konfigurieren und starten
 ipaddr = str(sys.argv[1])

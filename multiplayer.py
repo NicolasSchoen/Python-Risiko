@@ -12,6 +12,9 @@ import socket
 """Gui hat keinen Zugriff auf Karte-Klasse"""
 
 aktiverSpieler = 0          #vom server zugewiesen
+spielerDran = 0             #vom server zugewiesen
+phase = 0                   #vom server zugewiesen
+verstaerkung = 0            #vom server zugewiesen
 letzteTruppen = 0
 istDran = False
 if(len(sys.argv) != 3):
@@ -26,7 +29,11 @@ port = int(sys.argv[2])
 
 def btn1func():
     if(istDran):
+        global verstaerkung
+
         #beende Spiel, wenn Spieler verloren hat
+        msg = "btnRound:"
+        clientSocket.send(msg.encode())
         provinit()
 
         labeltext.config(text=" ")
@@ -55,7 +62,7 @@ def btn1func():
                 butt1.config(image=imgstart4)
         elif w == 1:
             butt1.config(image=imgverst)
-            labeltext.config(text="noch " + str(map.getVerstaerkung()) + " Einheiten platzieren")
+            labeltext.config(text="noch " + str(verstaerkung) + " Einheiten platzieren")
         elif w == 2:
             labeltext.config(text="Angriff mit #Einheiten")
             butt1.config(image=imgangriff)
@@ -65,22 +72,80 @@ def btn1func():
 
 def btnprovfunc(zahl):
     global istDran
+
     if(istDran):
+        msg = "btnProv:" + str(zahl)
+        clientSocket.send(msg.encode())
         provinit()
 
 
 def provinit():
+    global provinf
+    global spielerDran
+    global phase
+    global verstaerkung
+    global istDran
+    global aktiverSpieler
+
+    print("initialize province")
+    print(provinf)
     for x in range(13):
         if x != 0:
-            provinf = [0,0]                                                             #!Dummy
-            if (provinf[1] == 1):
-                butt[x].config(bg="lightblue")
-            elif (provinf[1] == 2):
-                butt[x].config(bg="yellow")
-            elif (provinf[1] == 3):
-                butt[x].config(bg="orange")
-            elif (provinf[1] == 4):
-                butt[x].config(bg="green")
+            #provinf = [0,0]                                                             #!Dummy
+            if (provinf[x][1] == 1):
+                butt[x].config(bg="lightblue", text=str(provinf[x][0]))
+            elif (provinf[x][1] == 2):
+                butt[x].config(bg="yellow", text=str(provinf[x][0]))
+            elif (provinf[x][1] == 3):
+                butt[x].config(bg="orange", text=str(provinf[x][0]))
+            elif (provinf[x][1] == 4):
+                butt[x].config(bg="green", text=str(provinf[x][0]))
+        else:
+            spielerDran = int(provinf[0][1])
+            phase = int(provinf[0][2])
+            verstaerkung = int(provinf[0][3])
+            if(spielerDran == aktiverSpieler):
+                istDran = True
+            else:
+                istDran = False
+
+            rundenbuttonInit()
+
+
+def rundenbuttonInit():
+    global spielerDran
+    global phase
+    global istDran
+    global verstaerkung
+    # setze Farbe des Rundenbuttons
+    if (spielerDran == 1):
+        butt1.config(bg="lightblue")
+    elif (spielerDran == 2):
+        butt1.config(bg="yellow")
+    elif (spielerDran == 3):
+        butt1.config(bg="orange")
+    elif (spielerDran == 4):
+        butt1.config(bg="green")
+
+    # waehle passendes Bild fuer Knopf
+    if(not istDran):
+        if spielerDran == 1:
+            butt1.config(image=imgstart)
+        elif spielerDran == 2:
+            butt1.config(image=imgstart2)
+        elif spielerDran == 3:
+            butt1.config(image=imgstart3)
+        elif spielerDran == 4:
+            butt1.config(image=imgstart4)
+    elif phase == 1:
+        butt1.config(image=imgverst)
+        labeltext.config(text="noch " + str(verstaerkung) + " Einheiten platzieren")
+    elif phase == 2:
+        labeltext.config(text="Angriff mit #Einheiten")
+        butt1.config(image=imgangriff)
+    elif phase == 3:
+        labeltext.config(text="Bewegen von #Einheiten")
+        butt1.config(image=imgbewegen)
 
 def nachbarnZeigen(modus, provid):  # modus = 1|2: angriff oder bewegen; privid = Provinz
     pass
@@ -90,15 +155,40 @@ def idleplayer():
     global istDran
 
     while True:
+        time.sleep(0.5)
+        clientSocket.send("info".encode())
         antwort = clientSocket.recv(1024).decode()
+        print("CLIENT:::::antwort=",antwort)
         if(antwort == 'exit'):
             print("Beende")
             istDran = False
             showinfo("", "Server wurde beendet, du kannst nun das Spiel schliessen!")
             break
+        if(antwort[0] == '1'):  #Server sendet karteninfo
+            print("zeige Karte an")
+            decodeMap(antwort)
+            provinit()
         #clientSocket.send(nachricht.encode())
+        antwort=""
     exit(0)
 
+
+def decodeMap(mapstr=""):
+    global provinf
+    provinf = []
+
+    prov = mapstr.split(":")
+    provs = []
+    for p in prov:
+        provs.append(p.split(","))
+
+    for p in provs:
+        p[0] = int(p[0])
+        p[1] = int(p[1])
+        provinf.append(p)
+
+
+provinf = [[0,0]]
 
 ##Start der Gui-initialisierung
 breite = 720
@@ -174,7 +264,7 @@ butt[11].place(x=200, y=650+yoffset)
 butt[12] = Button(root, bg="grey", text="1", command=lambda: btnprovfunc(12))
 butt[12].place(x=220, y=150+yoffset)
 
-provinit()
+#provinit()
 
 #Server beitreten
 clientSocket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
