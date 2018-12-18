@@ -53,6 +53,10 @@ class Karte:
         return self.knotenzahl[knoten]
 
 
+    def getSpielerGueltig(self, splr):
+        return self.spielergueltig[splr]
+
+
     #gibt provinzinfo-liste der angegebenen Provinz zurueck
     def getProvInfo(self, knoten):
         return self.info[knoten]

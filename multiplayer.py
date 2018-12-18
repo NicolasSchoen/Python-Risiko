@@ -152,6 +152,8 @@ def leseAntwort():
         print("zeige Karte an")
         decodeMap(antwort)
         provinit()
+    if (antwort[0] == 'f'):
+        spielAuswerten(antwort)
     semaphorBtn = True
 
 
@@ -169,6 +171,28 @@ def decodeMap(mapstr=""):
         p[0] = int(p[0])
         p[1] = int(p[1])
         provinf.append(p)
+
+
+def spielAuswerten(msg=""):
+    global aktiverSpieler
+    feld = msg.split(":")
+    if(int(feld[1]) == aktiverSpieler):
+        gwtext = "Du hast gewonnen! Highscore=" + str(feld[2])
+        showinfo("Gewonnen",gwtext)
+        schreibeHighscore(int(feld[2]))
+    else:
+        showinfo("Verloren","Du hast verloren!")
+
+
+def schreibeHighscore(score):
+    # Highscore in Datenbank speichern
+    conn = sqlite3.connect('risiko.db')
+    c = conn.cursor()
+    commnd = "INSERT INTO highscore VALUES ('" + str(time.time()) + "','" + str(score) + "')"
+    c.execute(commnd)
+    conn.commit()
+    conn.close()
+    print("Highscore erfolgreich in Datenbank gespeichert!")
 
 
 provinf = [[0,0]]

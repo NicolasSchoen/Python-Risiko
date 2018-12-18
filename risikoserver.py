@@ -25,6 +25,7 @@ def waitForPlayers():
     """warte, bis spieler beitreten, unterbrochen durch 'beenden' und 'starten'"""
     global beigetreten
     global serverRunning
+    global aktiveSpieler
 
     while serverRunning:
         print("Warte auf spieler")
@@ -37,6 +38,7 @@ def waitForPlayers():
             else:
                 status[beigetreten] = "beigetreten"
                 beigetreten +=1
+                aktiveSpieler += 1
                 acttable()
                 #sendtext = "ok:" + str(beigetreten)
                 #client.send(sendtext.encode())
@@ -48,6 +50,7 @@ def idleplayer(spieler, ssocket):
     global serverRunning
     global spielLaeuft
     global map
+    global aktiveSpieler
 
     sendtext = "ok:" + str(spieler)
     ssocket.send(sendtext.encode())
@@ -55,18 +58,25 @@ def idleplayer(spieler, ssocket):
         #bearbeite spieleranfragen
         if(spielLaeuft):
             msg = ssocket.recv(1024).decode()
-            if(msg == 'info'):
-                ssocket.send(mapToString().encode())
-            if(msg == 'rundenButton'):
-                map.drueckeRunde()
-                acttable()
-                ssocket.send(mapToString().encode())
-            if(msg[0] == 'p'):
-                provwahl = msg.split(":")
-                print("Server erhaelt:",provwahl)
-                #provnumr, spielernr, truppen
-                map.drueckeKnopf(int(provwahl[1]), spieler, int(provwahl[2]))
-                ssocket.send(mapToString().encode())
+            if(aktiveSpieler > 1):
+                if(msg == 'info'):
+                    ssocket.send(mapToString().encode())
+                if(msg == 'rundenButton'):
+                    map.drueckeRunde()
+                    acttable()
+                    ssocket.send(mapToString().encode())
+                if(msg[0] == 'p'):
+                    provwahl = msg.split(":")
+                    print("Server erhaelt:",provwahl)
+                    #provnumr, spielernr, truppen
+                    map.drueckeKnopf(int(provwahl[1]), spieler, int(provwahl[2]))
+                    aktiveSpieler = map.getAktiveSpieler()
+                    acttable()
+                    ssocket.send(mapToString().encode())
+            else:
+                message = "f:" + str(map.spielerAnReihe()) + ":" + str(map.calculateScore())
+                ssocket.send(message.encode())
+                break
             #time.sleep(1)
         else:
             time.sleep(1)
@@ -145,7 +155,10 @@ def acttable():
             if(i+1 == map.spielerAnReihe()):
                 status[i] = str(map.getPhase()[0])
             else:
-                status[i] = "wartet auf andere spieler"
+                if(map.getSpielerGueltig(i)):
+                    status[i] = "wartet auf andere spieler"
+                else:
+                    status[i] = "ausgeschieden"
 
     spieler1.configure(text=spielername[0])
     status1.configure(text=status[0])
@@ -161,6 +174,7 @@ if len(sys.argv) != 3:
     exit(1)
 
 beigetreten = 0
+aktiveSpieler = 0
 serverRunning = True
 spielLaeuft = False
 map = karte.Karte()
