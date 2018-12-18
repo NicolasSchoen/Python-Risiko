@@ -28,47 +28,11 @@ port = int(sys.argv[2])
 
 
 def btn1func():
+    global istDran
+
     if(istDran):
-        global verstaerkung
-
-        #beende Spiel, wenn Spieler verloren hat
-        msg = "btnRound:"
-        clientSocket.send(msg.encode())
-        provinit()
-
-        labeltext.config(text=" ")
-        r=1                                                                     #!Dummy
-        w=0                                                                     #!Dummy
-
-        # setze Farbe des Rundenbuttons
-        if (r == 1):
-            butt1.config(bg="lightblue")
-        elif (r == 2):
-            butt1.config(bg="yellow")
-        elif (r == 3):
-            butt1.config(bg="orange")
-        elif (r == 4):
-            butt1.config(bg="green")
-
-        # waehle passendes Bild fuer Knopf
-        if r != aktiverSpieler:
-            if r == 1:
-                butt1.config(image=imgstart)
-            elif r == 2:
-                butt1.config(image=imgstart2)
-            elif r == 3:
-                butt1.config(image=imgstart3)
-            elif r == 4:
-                butt1.config(image=imgstart4)
-        elif w == 1:
-            butt1.config(image=imgverst)
-            labeltext.config(text="noch " + str(verstaerkung) + " Einheiten platzieren")
-        elif w == 2:
-            labeltext.config(text="Angriff mit #Einheiten")
-            butt1.config(image=imgangriff)
-        elif w == 3:
-            labeltext.config(text="Bewegen von #Einheiten")
-            butt1.config(image=imgbewegen)
+        clientSocket.send("rundenButton".encode())
+        leseAntwort()
 
 def btnprovfunc(zahl):
     global istDran
@@ -157,20 +121,24 @@ def idleplayer():
     while True:
         time.sleep(0.5)
         clientSocket.send("info".encode())
-        antwort = clientSocket.recv(1024).decode()
-        print("CLIENT:::::antwort=",antwort)
-        if(antwort == 'exit'):
-            print("Beende")
-            istDran = False
-            showinfo("", "Server wurde beendet, du kannst nun das Spiel schliessen!")
+        if(leseAntwort() == -1):
             break
-        if(antwort[0] == '1'):  #Server sendet karteninfo
-            print("zeige Karte an")
-            decodeMap(antwort)
-            provinit()
-        #clientSocket.send(nachricht.encode())
-        antwort=""
     exit(0)
+
+
+"""liest antwort des Servers und entscheidet was zu tun ist"""
+def leseAntwort():
+    antwort = clientSocket.recv(1024).decode()
+    print("CLIENT:::::antwort=", antwort)
+    if (antwort == 'exit'):
+        print("Beende")
+        istDran = False
+        showinfo("", "Server wurde beendet, du kannst nun das Spiel schliessen!")
+        return -1
+    if (antwort[0] == '1'):  # Server sendet karteninfo
+        print("zeige Karte an")
+        decodeMap(antwort)
+        provinit()
 
 
 def decodeMap(mapstr=""):

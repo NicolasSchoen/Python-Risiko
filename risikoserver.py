@@ -57,6 +57,10 @@ def idleplayer(spieler, ssocket):
             msg = ssocket.recv(1024).decode()
             if(msg == 'info'):
                 ssocket.send(mapToString().encode())
+            if(msg == 'rundenButton'):
+                map.drueckeRunde()
+                acttable()
+                ssocket.send(mapToString().encode())
             #time.sleep(1)
         else:
             time.sleep(1)
@@ -80,6 +84,7 @@ def servstarten():
         map.felderInitialisieren()
         map.drueckeRunde()
         spielLaeuft = True
+        acttable()
         mapToString()
     else:
         showinfo("starten nicht moeglich!", "Zu wenige Spieler!")
@@ -125,6 +130,16 @@ def delKi():
 
 def acttable():
     """aktualisiere tabelleneintraege"""
+    global status
+    global map
+    global spielLaeuft
+    global beigetreten
+    if(spielLaeuft):
+        for i in range(beigetreten):
+            if(i+1 == map.spielerAnReihe()):
+                status[i] = str(map.getPhase()[0])
+            else:
+                status[i] = "wartet auf andere spieler"
 
     spieler1.configure(text=spielername[0])
     status1.configure(text=status[0])
@@ -142,7 +157,7 @@ if len(sys.argv) != 3:
 beigetreten = 0
 serverRunning = True
 spielLaeuft = False
-#map = karte.Karte()
+map = karte.Karte()
 
 #server konfigurieren und starten
 ipaddr = str(sys.argv[1])
