@@ -50,7 +50,7 @@ class StartPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
-        label = tk.Label(self, text="Risiko alpha 0.2", font=controller.title_font)
+        label = tk.Label(self, text="Risiko beta 0.9", font=controller.title_font)
         label.pack(side="top", fill="x", pady=10)
         label2 = tk.Label(self, text="Nicolas Schön | Johannes Wimmer")
         label2.pack(side="top", fill="x", pady=10)
@@ -122,26 +122,40 @@ class Highscore(tk.Frame):
                            command=lambda: controller.show_frame("StartPage"))
         button.pack()
 
-        button2 = tk.Button(self, text="aktualisieren", command=lambda: self.showHighscore())
-        button2.pack()
+        btnauswahl = tk.Frame(self)
+        button2 = tk.Button(btnauswahl, text="top10", command=lambda: self.showHighscore(True))
+        button2.pack(side="left")
+        button3 = tk.Button(btnauswahl, text="letzte10", command=lambda: self.showHighscore(False))
+        button3.pack(side="left")
+        btnauswahl.pack()
 
         self.hscore = tk.Label(self, text="")
         self.hscore.pack()
 
 
-    def showHighscore(self):
-        hs = "Top 10 Ergebnisse:\n"
+    def showHighscore(self, top10 = True):
+        if(top10):
+            hs = "Top 10 Ergebnisse:\n"
+        else:
+            hs = "Letzte 10 Ergebnisse: \n"
         conn = sqlite3.connect('risiko.db')
         c = conn.cursor()
         #c.execute('''CREATE TABLE highscore
         #            (datum text, score int)''')
 
         rang=1
-        for row in c.execute("SELECT score FROM highscore ORDER BY highscore.score DESC limit 10"):
-            print(row)
-            if(rang <= 10):
-                hs += str(rang) + ": " + str(row[0]) + "\n"
-            rang += 1
+        if(top10):
+            for row in c.execute("SELECT score FROM highscore ORDER BY highscore.score DESC limit 10"):
+                print(row)
+                if(rang <= 10):
+                    hs += str(rang) + ": " + str(row[0]) + "\n"
+                rang += 1
+        else:
+            for row in c.execute("SELECT score FROM highscore ORDER BY highscore.datum DESC limit 10"):
+                print(row)
+                if(rang <= 10):
+                    hs += str(rang) + ": " + str(row[0]) + "\n"
+                rang += 1
 
         conn.commit()
         conn.close()
