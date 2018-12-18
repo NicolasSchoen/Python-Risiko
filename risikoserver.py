@@ -61,6 +61,12 @@ def idleplayer(spieler, ssocket):
                 map.drueckeRunde()
                 acttable()
                 ssocket.send(mapToString().encode())
+            if(msg[0] == 'p'):
+                provwahl = msg.split(":")
+                print("Server erhaelt:",provwahl)
+                #provnumr, spielernr, truppen
+                map.drueckeKnopf(int(provwahl[1]), spieler, int(provwahl[2]))
+                ssocket.send(mapToString().encode())
             #time.sleep(1)
         else:
             time.sleep(1)

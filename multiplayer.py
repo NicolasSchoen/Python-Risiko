@@ -17,6 +17,7 @@ phase = 0                   #vom server zugewiesen
 verstaerkung = 0            #vom server zugewiesen
 letzteTruppen = 0
 istDran = False
+semaphorBtn = True
 if(len(sys.argv) != 3):
     showerror("Fehler","nicht 2 Argumente angegeben!")
     exit(1)
@@ -29,18 +30,26 @@ port = int(sys.argv[2])
 
 def btn1func():
     global istDran
+    global semaphorBtn
 
     if(istDran):
+        semaphorBtn = False
         clientSocket.send("rundenButton".encode())
         leseAntwort()
 
 def btnprovfunc(zahl):
     global istDran
+    global semaphorBtn
+    global provinf
+    global aktiverSpieler
 
     if(istDran):
-        msg = "btnProv:" + str(zahl)
+        if(provinf[zahl][1] == aktiverSpieler):
+            slider.config(to=provinf[zahl][0] - 1)
+        msg = "provButton:" + str(zahl) + ":" + str(slider.get())
+        semaphorBtn = False
         clientSocket.send(msg.encode())
-        provinit()
+        leseAntwort()
 
 
 def provinit():
@@ -117,17 +126,21 @@ def nachbarnZeigen(modus, provid):  # modus = 1|2: angriff oder bewegen; privid 
 #thread des spieler
 def idleplayer():
     global istDran
+    global semaphorBtn
 
     while True:
-        time.sleep(0.5)
-        clientSocket.send("info".encode())
-        if(leseAntwort() == -1):
-            break
+        if(semaphorBtn):
+            time.sleep(0.5)
+            clientSocket.send("info".encode())
+            if(leseAntwort() == -1):
+                break
     exit(0)
 
 
 """liest antwort des Servers und entscheidet was zu tun ist"""
 def leseAntwort():
+    global semaphorBtn
+
     antwort = clientSocket.recv(1024).decode()
     print("CLIENT:::::antwort=", antwort)
     if (antwort == 'exit'):
@@ -139,9 +152,11 @@ def leseAntwort():
         print("zeige Karte an")
         decodeMap(antwort)
         provinit()
+    semaphorBtn = True
 
 
 def decodeMap(mapstr=""):
+    # "info" : (anzEinheiten, BesitzerId)
     global provinf
     provinf = []
 
