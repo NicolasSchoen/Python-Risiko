@@ -133,12 +133,18 @@ class Karte:
     def pruefeLand(self):
         if(self.info[1][1] == self.spielerDran and self.info[2][1] == self.spielerDran and self.info[3][1] == self.spielerDran and self.info[4][1] == self.spielerDran and self.info[5][1] == self.spielerDran and self.info[12][1] == self.spielerDran):
             self.land[0][1] = self.spielerDran
+        else:
+            self.land[0][1] = 0
 
         if(self.info[9][1] == self.spielerDran and self.info[10][1] == self.spielerDran and self.info[11][1] == self.spielerDran):
             self.land[1][1] = self.spielerDran
+        else:
+            self.land[1][1] = 0
 
         if(self.info[6][1] == self.spielerDran and self.info[7][1] == self.spielerDran and self.info[8][1] == self.spielerDran):
             self.land[2][1] = self.spielerDran
+        else:
+            self.land[2][1] = 0
 
 
     #gibt die moegliche Anzahl an Verstaerkungs-Einheiten des angegebenen Spielers zurueck
