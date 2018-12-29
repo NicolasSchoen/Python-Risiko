@@ -247,13 +247,6 @@ class Karte:
                     self.info[nach][0] = feinheiten
 
 
-
-
-    #TODO
-    def verschieben(self, provnr):
-        pass
-
-
     #TODO Ki platziert Einheiten
     def ki_platzieren(self):
         einheiten = self.berechneVerstaerkung(self.spielerDran)
