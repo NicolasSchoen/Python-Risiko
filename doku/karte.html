@@ -1,0 +1,143 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module karte</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>karte</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:e%3A%5Cnico%5Cdocuments%5Cstudium%5Caktuell%5Cpython%5Ccode%5Cpython-risiko%5Ckarte.py">e:\nico\documents\studium\aktuell\python\code\python-risiko\karte.py</a></font></td></tr></table>
+    <p></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="time.html">time</a><br>
+</td><td width="25%" valign=top><a href="wuerfel.html">wuerfel</a><br>
+</td><td width="25%" valign=top></td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="builtins.html#object">builtins.object</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="karte.html#Karte">Karte</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Karte">class <strong>Karte</strong></a>(<a href="builtins.html#object">builtins.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt><a href="#Karte">Karte</a>(anz=2,&nbsp;singlplr=False)<br>
+&nbsp;<br>
+<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="Karte-__init__"><strong>__init__</strong></a>(self, anz=2, singlplr=False)</dt><dd><tt>Konstruktor&nbsp;der&nbsp;<a href="#Karte">Karte</a><br>
+:param&nbsp;anz:&nbsp;Anzahl&nbsp;der&nbsp;Spieler<br>
+:param&nbsp;singlplr:&nbsp;singleplayer&nbsp;oder&nbsp;multiplayer<br>
+:return:&nbsp;Ergebnis&nbsp;des&nbsp;Wurfs</tt></dd></dl>
+
+<dl><dt><a name="Karte-angreifen"><strong>angreifen</strong></a>(self, von, nach, anzahl, spieler)</dt><dd><tt>'spieler'&nbsp;greift&nbsp;von&nbsp;Provinz&nbsp;'von'&nbsp;mit&nbsp;'anz'&nbsp;Einheiten&nbsp;Provinz&nbsp;'nach'&nbsp;an</tt></dd></dl>
+
+<dl><dt><a name="Karte-berechneVerstaerkung"><strong>berechneVerstaerkung</strong></a>(self, spieler)</dt><dd><tt>gibt&nbsp;die&nbsp;moegliche&nbsp;Anzahl&nbsp;an&nbsp;Verstaerkungs-Einheiten&nbsp;des&nbsp;angegebenen&nbsp;Spielers&nbsp;zurueck</tt></dd></dl>
+
+<dl><dt><a name="Karte-bewege"><strong>bewege</strong></a>(self, von, nach, anzahl=1)</dt><dd><tt>bewege&nbsp;'anzahl'&nbsp;Einheiten&nbsp;von&nbsp;Provinz'von'&nbsp;nach&nbsp;Provinz'nach'</tt></dd></dl>
+
+<dl><dt><a name="Karte-calculateScore"><strong>calculateScore</strong></a>(self)</dt><dd><tt>berechnet&nbsp;den&nbsp;Score&nbsp;und&nbsp;gibt&nbsp;ihn&nbsp;zurueck</tt></dd></dl>
+
+<dl><dt><a name="Karte-drueckeKnopf"><strong>drueckeKnopf</strong></a>(self, provnumr, spielernr, truppen=0)</dt><dd><tt>schnittstelle&nbsp;der&nbsp;Provinzauswahl</tt></dd></dl>
+
+<dl><dt><a name="Karte-drueckeRunde"><strong>drueckeRunde</strong></a>(self)</dt><dd><tt>veraendert&nbsp;die&nbsp;Phase,&nbsp;evtl&nbsp;kommt&nbsp;ein&nbsp;neuer&nbsp;Spieler&nbsp;dran</tt></dd></dl>
+
+<dl><dt><a name="Karte-eigeneProvinz"><strong>eigeneProvinz</strong></a>(self, provnr, spielernr)</dt><dd><tt>gibt&nbsp;zurueck,&nbsp;ob&nbsp;die&nbsp;angegebene&nbsp;Provinz&nbsp;dem&nbsp;Spieler&nbsp;gehoert</tt></dd></dl>
+
+<dl><dt><a name="Karte-felderInitialisieren"><strong>felderInitialisieren</strong></a>(self)</dt><dd><tt>legt&nbsp;die&nbsp;startprovinzen&nbsp;fest</tt></dd></dl>
+
+<dl><dt><a name="Karte-getAktiveSpieler"><strong>getAktiveSpieler</strong></a>(self)</dt><dd><tt>gibt&nbsp;die&nbsp;noch&nbsp;vorhandenen&nbsp;Spieler&nbsp;aus</tt></dd></dl>
+
+<dl><dt><a name="Karte-getBesitzer"><strong>getBesitzer</strong></a>(self, knoten)</dt><dd><tt>gibt&nbsp;den&nbsp;Besitzer&nbsp;der&nbsp;engagabenen&nbsp;Provinz&nbsp;zurueck</tt></dd></dl>
+
+<dl><dt><a name="Karte-getMap"><strong>getMap</strong></a>(self)</dt><dd><tt>gibt&nbsp;<a href="#Karte">Karte</a>&nbsp;zurueck</tt></dd></dl>
+
+<dl><dt><a name="Karte-getPhase"><strong>getPhase</strong></a>(self)</dt><dd><tt>gibt&nbsp;die&nbsp;aktuelle&nbsp;Phase&nbsp;zurueck</tt></dd></dl>
+
+<dl><dt><a name="Karte-getProvInfo"><strong>getProvInfo</strong></a>(self, knoten)</dt><dd><tt>gibt&nbsp;provinzinfo-liste&nbsp;der&nbsp;angegebenen&nbsp;Provinz&nbsp;zurueck</tt></dd></dl>
+
+<dl><dt><a name="Karte-getSpielerGueltig"><strong>getSpielerGueltig</strong></a>(self, splr)</dt><dd><tt>prueft,&nbsp;ob&nbsp;es&nbsp;den&nbsp;spieler&nbsp;gibt<br>
+:param&nbsp;splr:&nbsp;gewaehlter&nbsp;spieler<br>
+:return:&nbsp;True&nbsp;oder&nbsp;False</tt></dd></dl>
+
+<dl><dt><a name="Karte-getTruppen"><strong>getTruppen</strong></a>(self, knoten)</dt><dd><tt>gibt&nbsp;Einheiten&nbsp;der&nbsp;angegebenen&nbsp;Provinz&nbsp;zurueck</tt></dd></dl>
+
+<dl><dt><a name="Karte-getVerstaerkung"><strong>getVerstaerkung</strong></a>(self)</dt><dd><tt>gibt&nbsp;die&nbsp;Verstaerkung&nbsp;zurueck</tt></dd></dl>
+
+<dl><dt><a name="Karte-ki_angreifen"><strong>ki_angreifen</strong></a>(self)</dt><dd><tt>Ki&nbsp;greift&nbsp;Nacbarprovinz&nbsp;an</tt></dd></dl>
+
+<dl><dt><a name="Karte-ki_bewegen"><strong>ki_bewegen</strong></a>(self)</dt><dd><tt>Ki&nbsp;bewegt&nbsp;Einheiten</tt></dd></dl>
+
+<dl><dt><a name="Karte-ki_platzieren"><strong>ki_platzieren</strong></a>(self)</dt><dd><tt>Ki&nbsp;platziert&nbsp;Einheiten</tt></dd></dl>
+
+<dl><dt><a name="Karte-nachbarn"><strong>nachbarn</strong></a>(self, knoten=1)</dt><dd><tt>gibt&nbsp;nachbarn&nbsp;von&nbsp;angegebener&nbsp;provinz&nbsp;als&nbsp;liste&nbsp;zurueck<br>
+:param&nbsp;knoten:&nbsp;gewaehlte&nbsp;provinz<br>
+:return:&nbsp;Nachbarn&nbsp;der&nbsp;Provinz</tt></dd></dl>
+
+<dl><dt><a name="Karte-nameVon"><strong>nameVon</strong></a>(self, anz=1)</dt><dd><tt>gibt&nbsp;den&nbsp;Namen&nbsp;der&nbsp;angegebenen&nbsp;Provinz&nbsp;zurueck</tt></dd></dl>
+
+<dl><dt><a name="Karte-pruefeLand"><strong>pruefeLand</strong></a>(self)</dt><dd><tt>Pruefe,&nbsp;ob&nbsp;ein&nbsp;spieler&nbsp;ein&nbsp;gomplettes&nbsp;land&nbsp;besitzt&nbsp;(Gruppe&nbsp;von&nbsp;Provinzen)</tt></dd></dl>
+
+<dl><dt><a name="Karte-pruefeSpielerInSpiel"><strong>pruefeSpielerInSpiel</strong></a>(self, nr=1)</dt><dd><tt>prueft,&nbsp;ob&nbsp;der&nbsp;angegebene&nbsp;Spieler&nbsp;noch&nbsp;ueber&nbsp;Provinzen&nbsp;verfuegt,&nbsp;wenn&nbsp;nein,&nbsp;scheidet&nbsp;er&nbsp;aus&nbsp;dem&nbsp;spiel&nbsp;aus<br>
+durch&nbsp;spieler{nr}&nbsp;=&nbsp;False</tt></dd></dl>
+
+<dl><dt><a name="Karte-spielerAnReihe"><strong>spielerAnReihe</strong></a>(self)</dt><dd><tt>gibt&nbsp;den&nbsp;Spieler&nbsp;zurueck,&nbsp;der&nbsp;gerade&nbsp;an&nbsp;der&nbsp;Reihe&nbsp;ist</tt></dd></dl>
+
+<dl><dt><a name="Karte-verstaerkeProv"><strong>verstaerkeProv</strong></a>(self, numr, anzahl=1)</dt><dd><tt>erhoehe&nbsp;die&nbsp;Anzahl&nbsp;der&nbsp;Einheiten&nbsp;der&nbsp;angegebenen&nbsp;Provinz&nbsp;um&nbsp;1</tt></dd></dl>
+
+<dl><dt><a name="Karte-zaehleEinheiten"><strong>zaehleEinheiten</strong></a>(self)</dt><dd><tt>zaehlt&nbsp;die&nbsp;verbliebenen&nbsp;Einheiten</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>info</strong> = {1: [1, 2], 2: [1, 1], 3: [1, 1], 4: [1, 1], 5: [1, 1], 6: [1, 1], 7: [1, 1], 8: [1, 1], 9: [1, 1], 10: [1, 1], ...}</dl>
+
+<dl><dt><strong>knotennamen</strong> = {1: 'thessalonike', 2: 'olymp', 3: 'athen', 4: 'sparta', 5: 'kreta', 6: 'anatolien', 7: 'naher osten', 8: 'zypern', 9: 'sinai', 10: 'aegypten', ...}</dl>
+
+<dl><dt><strong>knotenzahl</strong> = {1: [2, 12], 2: [1, 3, 4], 3: [2, 4], 4: [2, 3, 5], 5: [4, 6], 6: [5, 7, 8, 12], 7: [6, 8, 9], 8: [6, 7], 9: [7, 10], 10: [9, 11], ...}</dl>
+
+<dl><dt><strong>land</strong> = {0: ['Griechenland', 0, 2], 1: ['Afrika', 0, 1], 2: ['Kleinasien', 0, 1]}</dl>
+
+<dl><dt><strong>phasetext</strong> = ['gegner wartet', 'Verstaerkungsphase', 'Angriffsphase', 'Bewegungsphase']</dl>
+
+<dl><dt><strong>spielergueltig</strong> = [False, False, False, False]</dl>
+
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-getrandbits"><strong>getrandbits</strong></a>(...)<font color="#909090"><font face="helvetica, arial"> method of <a href="random.html#Random">random.Random</a> instance</font></font></dt><dd><tt><a href="#-getrandbits">getrandbits</a>(k)&nbsp;-&gt;&nbsp;x.&nbsp;&nbsp;Generates&nbsp;an&nbsp;int&nbsp;with&nbsp;k&nbsp;random&nbsp;bits.</tt></dd></dl>
+ <dl><dt><a name="-random"><strong>random</strong></a>(...)<font color="#909090"><font face="helvetica, arial"> method of <a href="random.html#Random">random.Random</a> instance</font></font></dt><dd><tt><a href="#-random">random</a>()&nbsp;-&gt;&nbsp;x&nbsp;in&nbsp;the&nbsp;interval&nbsp;[0,&nbsp;1).</tt></dd></dl>
+</td></tr></table>
+</body></html>

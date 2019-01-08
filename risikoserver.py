@@ -172,94 +172,96 @@ def acttable():
     status4.configure(text=status[3])
 
 
-if len(sys.argv) != 3:
-    exit(1)
+if __name__ == '__main__':
 
-beigetreten = 0
-aktiveSpieler = 0
-serverRunning = True
-spielLaeuft = False
-map = karte.Karte()
+    if len(sys.argv) != 3:
+        exit(1)
 
-#server konfigurieren und starten
-ipaddr = str(sys.argv[1])
-port = int(sys.argv[2])
-serverSocket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-serverSocket.bind(('',port))
-serverSocket.listen(1)
-print("Server gestartet!")
-#threading.Thread(target=waitForPlayers).start()
-threading._start_new_thread(waitForPlayers,())
+    beigetreten = 0
+    aktiveSpieler = 0
+    serverRunning = True
+    spielLaeuft = False
+    map = karte.Karte()
 
-############################################################################################GUI-Design##################
-gui = Tk()
-gui.title("Risiko Server 0.1")
-#gui.configure(background="black")
+    #server konfigurieren und starten
+    ipaddr = str(sys.argv[1])
+    port = int(sys.argv[2])
+    serverSocket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+    serverSocket.bind(('',port))
+    serverSocket.listen(1)
+    print("Server gestartet!")
+    #threading.Thread(target=waitForPlayers).start()
+    threading._start_new_thread(waitForPlayers,())
 
-#kopfzeile
-kopf = Frame(gui)
-Label(kopf, text="                        ").pack(side=LEFT)
-labelipadr = Label(kopf, text=(ipaddr + ":" + str(port)))
-labelipadr.pack(side=LEFT)
-#Button beenden
-buttbeenden = Button(kopf, text="Server beenden", fg="white", bg="red" , command= lambda : servbeenden())
-buttbeenden.pack(side=LEFT)
+    ############################################################################################GUI-Design##################
+    gui = Tk()
+    gui.title("Risiko Server 0.1")
+    #gui.configure(background="black")
 
-kopf.pack()
+    #kopfzeile
+    kopf = Frame(gui)
+    Label(kopf, text="                        ").pack(side=LEFT)
+    labelipadr = Label(kopf, text=(ipaddr + ":" + str(port)))
+    labelipadr.pack(side=LEFT)
+    #Button beenden
+    buttbeenden = Button(kopf, text="Server beenden", fg="white", bg="red" , command= lambda : servbeenden())
+    buttbeenden.pack(side=LEFT)
 
-#Tabelle der Spieler
-tabl = Frame(gui)
-zeile = Frame(tabl)
-zeile1 = Frame(tabl)
-zeile2 = Frame(tabl)
-zeile3 = Frame(tabl)
-zeile4 = Frame(tabl)
-spielername = []
-status = []
-#noch dummy werte
-for x in range(4):
-    spielername.append("Spieler(" + str(x+1) + ")")
-    status.append("-")
+    kopf.pack()
 
-Label(zeile, text="Spieler").pack(side=LEFT)
-Label(zeile, text="Status").pack(side=LEFT)
-zeile.pack()
+    #Tabelle der Spieler
+    tabl = Frame(gui)
+    zeile = Frame(tabl)
+    zeile1 = Frame(tabl)
+    zeile2 = Frame(tabl)
+    zeile3 = Frame(tabl)
+    zeile4 = Frame(tabl)
+    spielername = []
+    status = []
+    #noch dummy werte
+    for x in range(4):
+        spielername.append("Spieler(" + str(x+1) + ")")
+        status.append("-")
 
-spieler1 = Label(zeile1, text=spielername[0])
-spieler1.pack(side = LEFT)
-status1 = Label(zeile1, text=status[0])
-status1.pack(side = LEFT)
-zeile1.pack()
+    Label(zeile, text="Spieler").pack(side=LEFT)
+    Label(zeile, text="Status").pack(side=LEFT)
+    zeile.pack()
 
-spieler2 = Label(zeile2, text=spielername[1])
-spieler2.pack(side = LEFT)
-status2 = Label(zeile2, text=status[1])
-status2.pack(side = LEFT)
-zeile2.pack()
+    spieler1 = Label(zeile1, text=spielername[0])
+    spieler1.pack(side = LEFT)
+    status1 = Label(zeile1, text=status[0])
+    status1.pack(side = LEFT)
+    zeile1.pack()
 
-spieler3 = Label(zeile3, text=spielername[2])
-spieler3.pack(side = LEFT)
-status3 = Label(zeile3, text=status[2])
-status3.pack(side = LEFT)
-zeile3.pack()
+    spieler2 = Label(zeile2, text=spielername[1])
+    spieler2.pack(side = LEFT)
+    status2 = Label(zeile2, text=status[1])
+    status2.pack(side = LEFT)
+    zeile2.pack()
 
-spieler4 = Label(zeile4, text=spielername[3])
-spieler4.pack(side = LEFT)
-status4 = Label(zeile4, text=status[3])
-status4.pack(side = LEFT)
-zeile4.pack()
+    spieler3 = Label(zeile3, text=spielername[2])
+    spieler3.pack(side = LEFT)
+    status3 = Label(zeile3, text=status[2])
+    status3.pack(side = LEFT)
+    zeile3.pack()
 
-print(spielername, status)
-#zeileki = Frame(tabl)
-#Button(zeileki, text="+ KI", command=lambda: addKi()).pack(side=LEFT)
-#Button(zeileki, text="- KI", command=lambda: delKi()).pack(side=LEFT)
-#zeileki.pack()
-tabl.pack(expand= True)
+    spieler4 = Label(zeile4, text=spielername[3])
+    spieler4.pack(side = LEFT)
+    status4 = Label(zeile4, text=status[3])
+    status4.pack(side = LEFT)
+    zeile4.pack()
 
-#Button Spiel starten
-buttstart = Button(gui, text="Spiel starten", bg="lightgreen", command = lambda : servstarten())
-buttstart.pack()
+    print(spielername, status)
+    #zeileki = Frame(tabl)
+    #Button(zeileki, text="+ KI", command=lambda: addKi()).pack(side=LEFT)
+    #Button(zeileki, text="- KI", command=lambda: delKi()).pack(side=LEFT)
+    #zeileki.pack()
+    tabl.pack(expand= True)
+
+    #Button Spiel starten
+    buttstart = Button(gui, text="Spiel starten", bg="lightgreen", command = lambda : servstarten())
+    buttstart.pack()
 
 
 
-gui.mainloop()
+    gui.mainloop()
