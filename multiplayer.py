@@ -29,6 +29,7 @@ port = int(sys.argv[2])
 
 
 def btn1func():
+    """Rundenbutton"""
     global istDran
     global semaphorBtn
 
@@ -38,6 +39,7 @@ def btn1func():
         leseAntwort()
 
 def btnprovfunc(zahl):
+    """Provinzbutton"""
     global istDran
     global semaphorBtn
     global provinf
@@ -53,6 +55,7 @@ def btnprovfunc(zahl):
 
 
 def provinit():
+    """initialisiere farbe und text der provinzbuttons"""
     global provinf
     global spielerDran
     global phase
@@ -86,6 +89,7 @@ def provinit():
 
 
 def rundenbuttonInit():
+    """initialisiere farbe und bild des rundenbuttons"""
     global spielerDran
     global phase
     global istDran
@@ -123,8 +127,9 @@ def rundenbuttonInit():
 def nachbarnZeigen(modus, provid):  # modus = 1|2: angriff oder bewegen; privid = Provinz
     pass
 
-#thread des spieler
+
 def idleplayer():
+    """thread des spieler, laeuft im hintergrund, ermoeglicht druecken der buttons"""
     global istDran
     global semaphorBtn
 
@@ -137,8 +142,8 @@ def idleplayer():
     exit(0)
 
 
-"""liest antwort des Servers und entscheidet was zu tun ist"""
 def leseAntwort():
+    """liest antwort des Servers und entscheidet was zu tun ist"""
     global semaphorBtn
 
     antwort = clientSocket.recv(1024).decode()
@@ -158,6 +163,7 @@ def leseAntwort():
 
 
 def decodeMap(mapstr=""):
+    """wandelt karte in textform(string) in liste der karteninformationen um"""
     # "info" : (anzEinheiten, BesitzerId)
     global provinf
     provinf = []
@@ -174,6 +180,7 @@ def decodeMap(mapstr=""):
 
 
 def spielAuswerten(msg=""):
+    """wertet ergebnis aus, bei gewinn wird score in DB geschrieben"""
     global aktiverSpieler
     feld = msg.split(":")
     if(int(feld[1]) == aktiverSpieler):
@@ -185,7 +192,7 @@ def spielAuswerten(msg=""):
 
 
 def schreibeHighscore(score):
-    # Highscore in Datenbank speichern
+    """Highscore in Datenbank speichern"""
     conn = sqlite3.connect('risiko.db')
     c = conn.cursor()
     commnd = "INSERT INTO highscore VALUES ('" + str(time.time()) + "','" + str(score) + "')"

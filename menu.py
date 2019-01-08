@@ -1,17 +1,15 @@
 import tkinter as tk                # python 3
 from tkinter import font  as tkfont # python 3
 from tkinter.messagebox import *
-#import Tkinter as tk     # python 2
-#import tkFont as tkfont  # python 2
 import socket
-import os
 import subprocess
 import sqlite3
-#import multiplayer
 
 class Risiko(tk.Tk):
+    """Hauptklasse"""
 
     def __init__(self, *args, **kwargs):
+        """erzeugt verschiedene frames und legt sie in stack ab, oberster frame wird angezeigt"""
         tk.Tk.__init__(self, *args, **kwargs)
 
         self.title_font = tkfont.Font(family='Helvetica', size=18, weight="bold", slant="italic")
@@ -39,6 +37,7 @@ class Risiko(tk.Tk):
         self.show_frame("StartPage")
 
     def show_frame(self, page_name):
+        """zeigt den angegebenen frame an"""
         '''Show a frame for the given page name'''
         frame = self.frames[page_name]
         frame.tkraise()
@@ -50,7 +49,7 @@ class StartPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
-        label = tk.Label(self, text="Risiko beta 0.9", font=controller.title_font)
+        label = tk.Label(self, text="Risiko v1.0", font=controller.title_font)
         label.pack(side="top", fill="x", pady=10)
         label2 = tk.Label(self, text="Nicolas Schön | Johannes Wimmer")
         label2.pack(side="top", fill="x", pady=10)
@@ -134,13 +133,14 @@ class Highscore(tk.Frame):
 
 
     def showHighscore(self, top10 = True):
+        """zeigt entweder top 10 oder die letzten 10 eintraege"""
         if(top10):
             hs = "Top 10 Ergebnisse:\n"
         else:
             hs = "Letzte 10 Ergebnisse: \n"
         conn = sqlite3.connect('risiko.db')
         c = conn.cursor()
-        #c.execute('''CREATE TABLE highscore
+        #c.execute('''CREATE TABLE IF NOT EXISTS highscore
         #            (datum text, score int)''')
 
         rang=1
@@ -168,14 +168,15 @@ class Host(tk.Frame):
     """spiel erstellen, angabe des Ports"""
 
     def serverErstellen(self, port=""):
-        if(port.isdigit() and (int(port) > 0 and int(port) < 65537)):
+        """prueft port und startet server"""
+        if(port.isdigit() and (int(port) > 0 and int(port) < 65536)):
             #showinfo("", "Starte Server mit IP " + self.stest.getsockname()[0] + " : " + port)
             #os.system("python risikoserver.py " + self.stest.getsockname()[0] + " " + port)
             #erzeuge extra prozess (damit hauptprogramm menu weiterlaeuft und nicht auf beendigung des servers wartet)
             subprocess.Popen(["python", "risikoserver.py", self.stest.getsockname()[0], port])
             #os.execv(os.curdir, ["python", "risikoserver.py", self.stest.getsockname()[0], port])
         else:
-            showinfo("", "Bitte Port zwischen 1 und 65536 waehlen!")
+            showinfo("", "Bitte Port zwischen 1 und 65535 waehlen!")
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
@@ -207,6 +208,7 @@ class Join(tk.Frame):
 
 
     def spielBeitreten(self, ipadr="", port=""):
+        """tritt spiel mit angegebener ip und port bei"""
         if (ipadr and port.isdigit() and (int(port) > 0 and int(port) < 65537)):
             #showinfo("", "Server mit IP " + ipadr + " : " + port + " beitreten")
             subprocess.Popen(["python", "multiplayer.py", str(ipadr), str(port)])

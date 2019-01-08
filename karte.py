@@ -1,6 +1,5 @@
 from random import *
 import time
-import schlacht
 import wuerfel
 
 class Karte:
@@ -22,8 +21,12 @@ class Karte:
     spielergueltig = [False, False, False, False]
 
 
-    #Konstruktor
     def __init__(self, anz=2, singlplr = False):
+        """Konstruktor der Karte
+        :param anz: Anzahl der Spieler
+        :param singlplr: singleplayer oder multiplayer
+        :return: Ergebnis des Wurfs
+        """
         self.singleplayer = singlplr
         self.anzSpieler = anz
         self.aktiveSpieler = anz
@@ -50,65 +53,73 @@ class Karte:
 
     #gibt nachbarn von angegebener provinz als liste zurueck
     def nachbarn(self, knoten=1):
+        """gibt nachbarn von angegebener provinz als liste zurueck
+        :param knoten: gewaehlte provinz
+        :return: Nachbarn der Provinz
+        """
         return self.knotenzahl[knoten]
 
 
     def getSpielerGueltig(self, splr):
+        """prueft, ob es den spieler gibt
+        :param splr: gewaehlter spieler
+        :return: True oder False
+        """
         return self.spielergueltig[splr]
 
 
-    #gibt provinzinfo-liste der angegebenen Provinz zurueck
     def getProvInfo(self, knoten):
+        """gibt provinzinfo-liste der angegebenen Provinz zurueck"""
         return self.info[knoten]
 
 
-    #gibt Karte zurueck
     def getMap(self):
+        """gibt Karte zurueck"""
         return self.info
 
 
-    #gibt den Besitzer der engagabenen Provinz zurueck
     def getBesitzer(self, knoten):
+        """gibt den Besitzer der engagabenen Provinz zurueck"""
         return self.info[knoten][1]
 
 
-    #gibt Einheiten der angegebenen Provinz zurueck
     def getTruppen(self, knoten):
+        """gibt Einheiten der angegebenen Provinz zurueck"""
         return self.info[knoten][0]
 
 
-    #gibt die noch vorhandenen Spieler aus
     def getAktiveSpieler(self):
+        """gibt die noch vorhandenen Spieler aus"""
         return self.aktiveSpieler
 
 
-    #gibt den Namen der angegebenen Provinz zurueck
     def nameVon(self, anz=1):
+        """gibt den Namen der angegebenen Provinz zurueck"""
         return self.knotennamen[anz]
 
 
-    #zaehlt die verbliebenen Einheiten
     def zaehleEinheiten(self):
+        """zaehlt die verbliebenen Einheiten"""
         einh=0
         for p in self.info:
             einh += self.info[p][0]
         return einh
 
 
-    #berechnet den Score und gibt ihn zurueck
     def calculateScore(self):
+        """berechnet den Score und gibt ihn zurueck"""
         score = self.zaehleEinheiten() - self.runde
         return score
 
 
-    #gibt den Spieler zurueck, der gerade an der Reihe ist
     def spielerAnReihe(self):
+        """gibt den Spieler zurueck, der gerade an der Reihe ist"""
         return self.spielerDran + 1
 
 
-    #prueft, ob der angegebene Spieler noch ueber Provinzen verfuegt, wenn nein, scheidet er aus dem spiel aus
-    #(durch spieler{nr} = False
     def pruefeSpielerInSpiel(self, nr=1):
+        """prueft, ob der angegebene Spieler noch ueber Provinzen verfuegt, wenn nein, scheidet er aus dem spiel aus
+        durch spieler{nr} = False"""
         val = False
         for s in self.info:
             if(self.info[s][1] == nr):
@@ -131,6 +142,7 @@ class Karte:
 
 
     def pruefeLand(self):
+        """Pruefe, ob ein spieler ein gomplettes land besitzt (Gruppe von Provinzen)"""
         if(self.info[1][1] == self.spielerDran and self.info[2][1] == self.spielerDran and self.info[3][1] == self.spielerDran and self.info[4][1] == self.spielerDran and self.info[5][1] == self.spielerDran and self.info[12][1] == self.spielerDran):
             self.land[0][1] = self.spielerDran
         else:
@@ -147,8 +159,8 @@ class Karte:
             self.land[2][1] = 0
 
 
-    #gibt die moegliche Anzahl an Verstaerkungs-Einheiten des angegebenen Spielers zurueck
     def berechneVerstaerkung(self, spieler):
+        """gibt die moegliche Anzahl an Verstaerkungs-Einheiten des angegebenen Spielers zurueck"""
         self.pruefeLand()
         spieler = int(spieler) + 1
         print(spieler)
@@ -166,31 +178,32 @@ class Karte:
         return verst
 
 
-    #gibt die aktuelle Phase zurueck
     def getPhase(self):
+        """gibt die aktuelle Phase zurueck"""
         return (self.phasetext[self.phase], self.phase)
 
 
-    #erhoehe die Anzahl der Einheiten der angegebenen Provinz um 1
     def verstaerkeProv(self, numr, anzahl=1):
+        """erhoehe die Anzahl der Einheiten der angegebenen Provinz um 1"""
         if(self.verstaerkung > 0):
             self.info[numr][0] += anzahl
             self.verstaerkung -= 1
 
 
     def getVerstaerkung(self):
+        """gibt die Verstaerkung zurueck"""
         return self.verstaerkung
 
 
-    #bewege 'anzahl' Einheiten von Provinz'von' nach Provinz'nach'
     def bewege(self,von,nach,anzahl=1):
+        """bewege 'anzahl' Einheiten von Provinz'von' nach Provinz'nach'"""
         if(self.info[von][0] > anzahl):
             self.info[von][0] -= anzahl
             self.info[nach][0] += anzahl
 
 
-    #TODO 'spieler' greift von Provinz 'von' mit 'anz' Einheiten Provinz 'nach' an
     def angreifen(self, von, nach, anzahl, spieler):
+        """'spieler' greift von Provinz 'von' mit 'anz' Einheiten Provinz 'nach' an"""
         print("Greife", self.knotennamen[nach], "von", self.knotennamen[von], "mit", str(anzahl),"Einheiten an")
         if(self.info[von][0] > anzahl):
             self.info[von][0] -= anzahl
@@ -247,8 +260,8 @@ class Karte:
                     self.info[nach][0] = feinheiten
 
 
-    #TODO Ki platziert Einheiten
     def ki_platzieren(self):
+        """Ki platziert Einheiten"""
         einheiten = self.berechneVerstaerkung(self.spielerDran)
         eigeneprovinzen = []
         for p in self.info:
@@ -267,11 +280,8 @@ class Karte:
                 einheiten -= 1
 
 
-
-
-
-    #TODO Ki greift Nacbarprovinz an
     def ki_angreifen(self):
+        """Ki greift Nacbarprovinz an"""
         eigeneprovinzen = []
         for p in self.info:
             if (self.info[p][1] == self.spielerAnReihe()):
@@ -304,9 +314,8 @@ class Karte:
             self.angreifen(pmax, fprov, einheitenzahl, self.spielerAnReihe())
 
 
-
-    #TODO Ki bewegt Einheiten
     def ki_bewegen(self):
+        """Ki bewegt Einheiten"""
         eigeneprovinzen = []
         for p in self.info:
             if (self.info[p][1] == self.spielerAnReihe()):
@@ -331,17 +340,16 @@ class Karte:
             self.bewege(zielprov,nachbrn[nbr],anzeinheiten)
 
 
-    #gibt zurueck, ob die angegebene Provinz dem Spieler gehoert
     def eigeneProvinz(self, provnr, spielernr):
+        """gibt zurueck, ob die angegebene Provinz dem Spieler gehoert"""
         if(self.info[provnr][1] == spielernr):
             return True
         else:
             return False
 
 
-
-    #schnittstelle der Provinzauswahl
     def drueckeKnopf(self, provnumr, spielernr, truppen=0):
+        """schnittstelle der Provinzauswahl"""
         #assert (isinstance(int, numr) and (numr<= 12 and numr > 0)), "Fehlerhafte Provinz gewaehlt"
         if(spielernr == self.spielerAnReihe()):
             #fuehre aktion des spielers aus, der gerade an reihe ist
@@ -381,8 +389,8 @@ class Karte:
         return None
 
 
-    #veraendert die Phase, evtl kommt ein neuer Spieler dran
     def drueckeRunde(self):
+        """veraendert die Phase, evtl kommt ein neuer Spieler dran"""
         if(self.runde > 2): #hier Anzahl der Start-Runden festlegen(in denen nur platziert wird)
             if(self.phase == 3):
                 naechster = (self.spielerDran + 1) % self.anzSpieler
@@ -428,8 +436,8 @@ class Karte:
             return self.phase
 
 
-    #legt die startprovinzen fest
     def felderInitialisieren(self):
+        """legt die startprovinzen fest"""
         if(self.anzSpieler == 2):
             sp=[6,6]
             frei = 12

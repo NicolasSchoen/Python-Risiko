@@ -19,6 +19,7 @@ letzteTruppen = 0
 
 
 def btn1func():
+    """Rundenbutton"""
     #beende Spiel, wenn Spieler verloren hat
     if (map.getAktiveSpieler() == 1 and map.spielerAnReihe() != 1):
         print("Spiel zuende")  # TODO: geht noch nicht
@@ -62,6 +63,7 @@ def btn1func():
         butt1.config(image=imgbewegen)
 
 def btnprovfunc(zahl):
+    """Provinzbutton"""
     provinit()
     global  letzteTruppen
 
@@ -110,6 +112,7 @@ def btnprovfunc(zahl):
 
 
 def provinit():
+    """Setze passende Farben der Provinz-Buttons"""
     for x in range(13):
         if x != 0:
             butt[x].config(text=map.getProvInfo(x)[0])
@@ -124,6 +127,7 @@ def provinit():
                 butt[x].config(bg="green")
 
 def nachbarnZeigen(modus, provid):  # modus = 1|2: angriff oder bewegen; privid = Provinz
+    """zeige Nachbarprovinzen farbig, gegnerische rot bei angriffsphase, eigene grau bei bewegungsphase"""
     angriffvon = provid
     nbrn = map.nachbarn(provid)
     for x in range(len(nbrn)):

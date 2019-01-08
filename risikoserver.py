@@ -47,6 +47,7 @@ def waitForPlayers():
 
 
 def idleplayer(spieler, ssocket):
+    """bearbeitet die anfragen des angegebenen spielers"""
     global serverRunning
     global spielLaeuft
     global map
@@ -107,6 +108,7 @@ def servstarten():
 
 
 def mapToString():
+    """wandelt karten-objekt in String um"""
     global map
 
     info = map.getMap()
@@ -121,7 +123,7 @@ def mapToString():
 
 
 def addKi():
-    """fuege ki an stelle des spielers hinzu"""
+    """TODO: fuege ki an stelle des spielers hinzu"""
 
     global beigetreten
     if(beigetreten < 4):
@@ -133,7 +135,7 @@ def addKi():
 
 
 def delKi():
-    """entferne KI"""
+    """TODO: entferne KI"""
     global beigetreten
     if(beigetreten > 1):
         spielername[beigetreten-1] = "Spieler(" + str(beigetreten) + ")"
@@ -248,10 +250,10 @@ status4.pack(side = LEFT)
 zeile4.pack()
 
 print(spielername, status)
-zeileki = Frame(tabl)
-Button(zeileki, text="+ KI", command=lambda: addKi()).pack(side=LEFT)
-Button(zeileki, text="- KI", command=lambda: delKi()).pack(side=LEFT)
-zeileki.pack()
+#zeileki = Frame(tabl)
+#Button(zeileki, text="+ KI", command=lambda: addKi()).pack(side=LEFT)
+#Button(zeileki, text="- KI", command=lambda: delKi()).pack(side=LEFT)
+#zeileki.pack()
 tabl.pack(expand= True)
 
 #Button Spiel starten
